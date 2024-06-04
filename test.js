@@ -1,0 +1,1 @@
+https://jschallenger.com/login/redeem/?linkToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImRhbXlhbi5iLmdlbm92QGdtYWlsLmNvbSIsImV4cCI6MTcxNzU3MDcwOCwidHlwZSI6ImxvZ2luVG9rZW4iLCJpYXQiOjE3MTc0ODQzMDh9.75uXnYn2lVSfelzWYk-MORX-F0MEGnGoTVcEXTc8vEU
