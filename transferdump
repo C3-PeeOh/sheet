@@ -1,0 +1,46 @@
+const createRace = (name, abilityModifiers, size, speed) => ({
+  name,
+  abilityModifiers,
+  size,
+  speed
+});
+
+const races = {
+  dwarf: createRace("Dwarf", { con: +2 }, "M", 25),
+  elf: createRace("Elf", { dex: +2 }, "M", 30),
+  halfling: createRace("Halfling", { dex: +2 }, "S", 25),
+  human: createRace("Human", { str: +1, dex: +1, con: +1, int: +1, wis: +1, cha: +1 }, "M", 30),
+  dragonborn: createRace("Dragonborn", { str: +2, cha: +1 }, "M", 30),
+  gnome: createRace("Gnome", { int: +2 }, "S", 25),
+  halfelf: createRace("Half-Elf", { cha: +2 }, "M", 30),
+  halforc: createRace("Half-Orc", { str: +2, con: +1 }, "M", 30),
+  Tiefling: createRace("Tiefling", { int: +1, cha: +2 }, "M", 30)
+};
+
+class Ability {
+  constructor({ str = 10, dex = 10, con = 10, int = 10, wis = 10, cha = 10 } = {}) {
+    this.str = str;
+    this.dex = dex;
+    this.con = con;
+    this.int = int;
+    this.wis = wis;
+    this.cha = cha;
+  }
+}
+
+const Character = function (name, className, level, background, race, alignment, abilities) {
+    this.name = name;
+    this.className = className;
+    this.level = level;
+    this.background = background;
+    this.race = race.name;
+    this.alignment = alignment;
+    this.abilities = abilities || new Ability();
+    for (let prop in race) {
+      if (race.hasOwnProperty(prop) && prop !== 'name') {
+        this[prop] = race[prop];
+      }
+    }
+  };
+
+  
