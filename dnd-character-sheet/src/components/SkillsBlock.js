@@ -1,25 +1,34 @@
-import React, { useState } from 'react';
-import TextField from '@mui/material/TextField';
+import React from 'react';
 import Box from '@mui/material/Box';
+import Checkbox from '@mui/material/Checkbox';
 import Typography from '@mui/material/Typography';
+import { calculateModifier } from '../utils';
 
-function SkillsBlock({ skills, onSkillChange }) {
-  const [errors, setErrors] = useState({});
+const skillModifiers = {
+  acrobatics: 'dexterity',
+  animalHandling: 'wisdom',
+  arcana: 'intelligence',
+  athletics: 'strength',
+  deception: 'charisma',
+  history: 'intelligence',
+  insight: 'wisdom',
+  intimidation: 'charisma',
+  investigation: 'intelligence',
+  medicine: 'wisdom',
+  nature: 'intelligence',
+  perception: 'wisdom',
+  performance: 'charisma',
+  persuasion: 'charisma',
+  religion: 'intelligence',
+  sleightOfHand: 'dexterity',
+  stealth: 'dexterity',
+  survival: 'wisdom',
+};
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    const intValue = parseInt(value);
-
-    // Validation
-    let newErrors = { ...errors };
-    if (intValue < 0 || intValue > 20) {
-      newErrors[name] = `${name} must be between 0 and 20`;
-    } else {
-      delete newErrors[name];
-    }
-    setErrors(newErrors);
-
-    onSkillChange(name, intValue);
+function SkillsBlock({ skills, attributes, proficiencyBonus, onSkillChange }) {
+  const handleCheckboxChange = (e) => {
+    const { name, checked } = e.target;
+    onSkillChange(name, checked);
   };
 
   return (
@@ -27,20 +36,25 @@ function SkillsBlock({ skills, onSkillChange }) {
       <Typography variant="h5" gutterBottom>
         Skills
       </Typography>
-      {Object.keys(skills).map((skill) => (
-        <TextField
-          key={skill}
-          label={skill.charAt(0).toUpperCase() + skill.slice(1).replace(/([A-Z])/g, ' $1').trim()}
-          name={skill}
-          type="number"
-          value={skills[skill]}
-          onChange={handleChange}
-          error={!!errors[skill]}
-          helperText={errors[skill]}
-          fullWidth
-          margin="normal"
-        />
-      ))}
+      {Object.keys(skills).map((skill) => {
+        const modifier = calculateModifier(attributes[skillModifiers[skill]]);
+        const value = modifier + (skills[skill] ? proficiencyBonus : 0);
+        return (
+          <Box key={skill} display="flex" alignItems="center" mb={2}>
+            <Checkbox
+              name={skill}
+              checked={skills[skill]}
+              onChange={handleCheckboxChange}
+            />
+            <Typography variant="body1" style={{ marginRight: '20px' }}>
+              {skill.charAt(0).toUpperCase() + skill.slice(1).replace(/([A-Z])/g, ' $1').trim()}:
+            </Typography>
+            <Typography variant="body1">
+              {value}
+            </Typography>
+          </Box>
+        );
+      })}
     </Box>
   );
 }

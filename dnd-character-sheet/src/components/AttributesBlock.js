@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
+import { calculateModifier } from '../utils';
 
 function AttributesBlock({ attributes, onAttributeChange }) {
   const [errors, setErrors] = useState({});
@@ -12,8 +13,8 @@ function AttributesBlock({ attributes, onAttributeChange }) {
 
     // Validation
     let newErrors = { ...errors };
-    if (intValue < 1) {
-      newErrors[name] = `${name} must be at least 1`;
+    if (intValue < 1 || intValue > 20) {
+      newErrors[name] = `${name} must be between 1 and 20`;
     } else {
       delete newErrors[name];
     }
@@ -28,18 +29,21 @@ function AttributesBlock({ attributes, onAttributeChange }) {
         Attributes
       </Typography>
       {Object.keys(attributes).map((attribute) => (
-        <TextField
-          key={attribute}
-          label={attribute.charAt(0).toUpperCase() + attribute.slice(1)}
-          name={attribute}
-          type="number"
-          value={attributes[attribute]}
-          onChange={handleChange}
-          error={!!errors[attribute]}
-          helperText={errors[attribute]}
-          fullWidth
-          margin="normal"
-        />
+        <Box key={attribute} display="flex" alignItems="center" mb={2}>
+          <TextField
+            label={attribute.charAt(0).toUpperCase() + attribute.slice(1)}
+            name={attribute}
+            type="number"
+            value={attributes[attribute]}
+            onChange={handleChange}
+            error={!!errors[attribute]}
+            helperText={errors[attribute]}
+            style={{ marginRight: '20px' }}
+          />
+          <Typography variant="body1">
+            Modifier: {calculateModifier(attributes[attribute])}
+          </Typography>
+        </Box>
       ))}
     </Box>
   );

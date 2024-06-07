@@ -1,10 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
+import { calculateModifier } from '../utils';
 
 function CharacterInfo({ character, onCharacterChange }) {
   const [errors, setErrors] = useState({});
+
+  useEffect(() => {
+    const dexModifier = calculateModifier(character.attributes.dexterity);
+    console.log(`Dex Modifier: ${dexModifier}`);  // Debugging output
+    onCharacterChange('initiative', dexModifier);
+    onCharacterChange('armorClass', 10 + dexModifier);
+  }, [character.attributes.dexterity]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -68,6 +76,42 @@ function CharacterInfo({ character, onCharacterChange }) {
         label="Background"
         name="background"
         value={character.background}
+        onChange={handleChange}
+        fullWidth
+        margin="normal"
+      />
+      <TextField
+        label="Speed"
+        name="speed"
+        type="number"
+        value={character.speed}
+        onChange={handleChange}
+        fullWidth
+        margin="normal"
+      />
+      <TextField
+        label="Initiative"
+        name="initiative"
+        type="number"
+        value={character.initiative}
+        InputProps={{ readOnly: true }}
+        fullWidth
+        margin="normal"
+      />
+      <TextField
+        label="Armor Class"
+        name="armorClass"
+        type="number"
+        value={character.armorClass}
+        InputProps={{ readOnly: true }}
+        fullWidth
+        margin="normal"
+      />
+      <TextField
+        label="Proficiency Bonus"
+        name="proficiencyBonus"
+        type="number"
+        value={character.proficiencyBonus}
         onChange={handleChange}
         fullWidth
         margin="normal"
