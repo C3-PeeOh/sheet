@@ -2,14 +2,18 @@ import React, { useState, useEffect } from 'react';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import { calculateModifier } from '../utils';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
+import InputLabel from '@mui/material/InputLabel';
+import FormControl from '@mui/material/FormControl';
+import races from '../data/races';
+import { calculateModifier, getNextLevelExperience } from '../utils';
 
-function CharacterInfo({ character, onCharacterChange }) {
+function CharacterInfo({ character, onCharacterChange, onRaceChange }) {
   const [errors, setErrors] = useState({});
 
   useEffect(() => {
     const dexModifier = calculateModifier(character.attributes.dexterity);
-    console.log(`Dex Modifier: ${dexModifier}`);  // Debugging output
     onCharacterChange('initiative', dexModifier);
     onCharacterChange('armorClass', 10 + dexModifier);
   }, [character.attributes.dexterity]);
@@ -27,6 +31,13 @@ function CharacterInfo({ character, onCharacterChange }) {
     }
     setErrors(newErrors);
   };
+
+  const handleRaceChange = (e) => {
+    const { value } = e.target;
+    onRaceChange(value);
+  };
+
+  const nextLevelExperience = getNextLevelExperience(character.level);
 
   return (
     <Box mb={4}>
@@ -58,25 +69,34 @@ function CharacterInfo({ character, onCharacterChange }) {
         name="level"
         type="number"
         value={character.level}
-        onChange={handleChange}
+        InputProps={{ readOnly: true }}
         fullWidth
         margin="normal"
       />
+      <FormControl fullWidth margin="normal">
+        <InputLabel shrink>Race</InputLabel>
+        <Select
+          label="Race"
+          name="race"
+          value={character.race}
+          onChange={handleRaceChange}
+          displayEmpty
+        >
+          <MenuItem value="" disabled>
+            Select Race
+          </MenuItem>
+          {races.map((race) => (
+            <MenuItem key={race.name} value={race.name}>
+              {race.name}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
       <TextField
-        label="Race"
-        name="race"
-        value={character.race}
-        onChange={handleChange}
-        error={!!errors.race}
-        helperText={errors.race}
-        fullWidth
-        margin="normal"
-      />
-      <TextField
-        label="Background"
-        name="background"
-        value={character.background}
-        onChange={handleChange}
+        label="Size"
+        name="size"
+        value={character.size}
+        InputProps={{ readOnly: true }}
         fullWidth
         margin="normal"
       />
@@ -85,7 +105,7 @@ function CharacterInfo({ character, onCharacterChange }) {
         name="speed"
         type="number"
         value={character.speed}
-        onChange={handleChange}
+        InputProps={{ readOnly: true }}
         fullWidth
         margin="normal"
       />
@@ -112,9 +132,19 @@ function CharacterInfo({ character, onCharacterChange }) {
         name="proficiencyBonus"
         type="number"
         value={character.proficiencyBonus}
+        InputProps={{ readOnly: true }}
+        fullWidth
+        margin="normal"
+      />
+      <TextField
+        label="Experience"
+        name="experience"
+        type="number"
+        value={character.experience}
         onChange={handleChange}
         fullWidth
         margin="normal"
+        helperText={nextLevelExperience !== null ? `Next level at ${nextLevelExperience} XP` : 'Max level reached'}
       />
     </Box>
   );

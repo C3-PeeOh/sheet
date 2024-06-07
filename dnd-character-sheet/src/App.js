@@ -1,14 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import CharacterInfo from './components/CharacterInfo';
 import AttributesBlock from './components/AttributesBlock';
 import SkillsBlock from './components/SkillsBlock';
 import SavingThrowsBlock from './components/SavingThrowsBlock';
+import races from './data/races';
+import skills from './data/skills';
+import attributes from './data/attributes';
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import './App.css';
-import { calculateModifier } from './utils';
+import { calculateModifier, getLevelFromExperience, getProficiencyBonusFromLevel } from './utils';
 
 function App() {
   const [character, setCharacter] = useState({
@@ -16,48 +19,34 @@ function App() {
     class: '',
     level: 1,
     race: '',
+    size: '',
     background: '',
     speed: 30,
     initiative: 0,
     armorClass: 10,
     proficiencyBonus: 2,
-    attributes: {
-      strength: 10,
-      dexterity: 10,
-      constitution: 10,
-      intelligence: 10,
-      wisdom: 10,
-      charisma: 10,
-    },
-    skills: {
-      acrobatics: false,
-      animalHandling: false,
-      arcana: false,
-      athletics: false,
-      deception: false,
-      history: false,
-      insight: false,
-      intimidation: false,
-      investigation: false,
-      medicine: false,
-      nature: false,
-      perception: false,
-      performance: false,
-      persuasion: false,
-      religion: false,
-      sleightOfHand: false,
-      stealth: false,
-      survival: false,
-    },
-    savingThrows: {
-      strength: false,
-      dexterity: false,
-      constitution: false,
-      intelligence: false,
-      wisdom: false,
-      charisma: false,
-    },
+    experience: 0,
+    attributes: { ...attributes },
+    skills: Object.keys(skills).reduce((acc, skill) => {
+      acc[skill] = false;
+      return acc;
+    }, {}),
+    savingThrows: Object.keys(attributes).reduce((acc, attr) => {
+      acc[attr] = false;
+      return acc;
+    }, {}),
   });
+  const [previousRace, setPreviousRace] = useState(null);
+
+  useEffect(() => {
+    const level = getLevelFromExperience(character.experience);
+    const proficiencyBonus = getProficiencyBonusFromLevel(level);
+    setCharacter((prevCharacter) => ({
+      ...prevCharacter,
+      level: level,
+      proficiencyBonus: proficiencyBonus,
+    }));
+  }, [character.experience]);
 
   const handleCharacterChange = (field, value) => {
     setCharacter((prevCharacter) => ({
@@ -102,6 +91,36 @@ function App() {
     }));
   };
 
+  const handleRaceChange = (raceName) => {
+    const selectedRace = races.find((race) => race.name === raceName);
+
+    if (selectedRace) {
+      // Revert the previous race's bonuses
+      const updatedAttributes = { ...character.attributes };
+      if (previousRace) {
+        Object.keys(previousRace.abilityBonuses).forEach((key) => {
+          updatedAttributes[key] -= previousRace.abilityBonuses[key];
+        });
+      }
+
+      // Apply the new race's bonuses
+      Object.keys(selectedRace.abilityBonuses).forEach((key) => {
+        updatedAttributes[key] += selectedRace.abilityBonuses[key];
+      });
+
+      setCharacter({
+        ...character,
+        race: selectedRace.name,
+        size: selectedRace.size,
+        speed: selectedRace.speed,
+        attributes: updatedAttributes,
+      });
+
+      // Update the previous race
+      setPreviousRace(selectedRace);
+    }
+  };
+
   const saveCharacter = () => {
     localStorage.setItem('character', JSON.stringify(character));
     alert('Character saved!');
@@ -123,7 +142,7 @@ function App() {
         <Typography variant="h3" gutterBottom>
           Dungeons & Dragons 5e Character Sheet
         </Typography>
-        <CharacterInfo character={character} onCharacterChange={handleCharacterChange} />
+        <CharacterInfo character={character} onCharacterChange={handleCharacterChange} onRaceChange={handleRaceChange} />
         <AttributesBlock attributes={character.attributes} onAttributeChange={handleAttributeChange} />
         <SkillsBlock 
           skills={character.skills} 
