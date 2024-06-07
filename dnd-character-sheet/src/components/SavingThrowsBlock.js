@@ -17,7 +17,7 @@ function SavingThrowsBlock({ savingThrows, attributes, proficiencyBonus, onSaveT
       </Typography>
       {Object.keys(attributes).map((attribute) => {
         const modifier = calculateModifier(attributes[attribute]);
-        const value = modifier + (savingThrows[attribute] ? proficiencyBonus : 0);
+        const value = modifier + (savingThrows[attribute] ? Number(proficiencyBonus) : 0);
         return (
           <Box key={attribute} display="flex" alignItems="center" mb={2}>
             <Checkbox

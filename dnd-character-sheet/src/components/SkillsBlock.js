@@ -38,7 +38,7 @@ function SkillsBlock({ skills, attributes, proficiencyBonus, onSkillChange }) {
       </Typography>
       {Object.keys(skills).map((skill) => {
         const modifier = calculateModifier(attributes[skillModifiers[skill]]);
-        const value = modifier + (skills[skill] ? proficiencyBonus : 0);
+        const value = modifier + (skills[skill] ? Number(proficiencyBonus) : 0);
         return (
           <Box key={skill} display="flex" alignItems="center" mb={2}>
             <Checkbox
