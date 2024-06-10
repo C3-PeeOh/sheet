@@ -1,15 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
+import RadioGroup from '@mui/material/RadioGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Radio from '@mui/material/Radio';
+import CustomTextField from './CustomTextField';
 import races from '../data/races';
+import classes from '../data/classes';
 import { calculateModifier, getNextLevelExperience } from '../utils';
 
-function CharacterInfo({ character, onCharacterChange, onRaceChange }) {
+function CharacterInfo({ character, onCharacterChange, onRaceChange, onClassChange }) {
   const [errors, setErrors] = useState({});
 
   useEffect(() => {
@@ -37,43 +41,32 @@ function CharacterInfo({ character, onCharacterChange, onRaceChange }) {
     onRaceChange(value);
   };
 
+  const handleClassChange = (e) => {
+    const { value } = e.target;
+    onClassChange(value);
+  };
+
+  const handleHPMethodChange = (e) => {
+    const { value } = e.target;
+    onCharacterChange('hpCalcMethod', value);
+  };
+
   const nextLevelExperience = getNextLevelExperience(character.level);
 
   return (
-    <Box mb={4}>
-      <Typography variant="h5" gutterBottom>
+    <Box className="box">
+      <Typography variant="h5" gutterBottom className="heading">
         Character Info
       </Typography>
-      <TextField
+      <CustomTextField
         label="Name"
         name="name"
         value={character.name}
         onChange={handleChange}
-        error={!!errors.name}
+        error={errors.name}
         helperText={errors.name}
-        fullWidth
-        margin="normal"
       />
-      <TextField
-        label="Class"
-        name="class"
-        value={character.class}
-        onChange={handleChange}
-        error={!!errors.class}
-        helperText={errors.class}
-        fullWidth
-        margin="normal"
-      />
-      <TextField
-        label="Level"
-        name="level"
-        type="number"
-        value={character.level}
-        InputProps={{ readOnly: true }}
-        fullWidth
-        margin="normal"
-      />
-      <FormControl fullWidth margin="normal">
+      <FormControl fullWidth margin="normal" className="form-control">
         <InputLabel shrink>Race</InputLabel>
         <Select
           label="Race"
@@ -92,59 +85,99 @@ function CharacterInfo({ character, onCharacterChange, onRaceChange }) {
           ))}
         </Select>
       </FormControl>
-      <TextField
+      <FormControl fullWidth margin="normal" className="form-control">
+        <InputLabel shrink>Class</InputLabel>
+        <Select
+          label="Class"
+          name="class"
+          value={character.class}
+          onChange={handleClassChange}
+          displayEmpty
+        >
+          <MenuItem value="" disabled>
+            Select Class
+          </MenuItem>
+          {classes.map((cls) => (
+            <MenuItem key={cls.name} value={cls.name}>
+              {cls.name}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+      <CustomTextField
+        label="Level"
+        name="level"
+        type="number"
+        value={character.level}
+        readOnly
+      />
+      <CustomTextField
         label="Size"
         name="size"
         value={character.size}
-        InputProps={{ readOnly: true }}
-        fullWidth
-        margin="normal"
+        readOnly
       />
-      <TextField
+      <CustomTextField
         label="Speed"
         name="speed"
         type="number"
         value={character.speed}
-        InputProps={{ readOnly: true }}
-        fullWidth
-        margin="normal"
+        readOnly
       />
-      <TextField
+      <CustomTextField
         label="Initiative"
         name="initiative"
         type="number"
         value={character.initiative}
-        InputProps={{ readOnly: true }}
-        fullWidth
-        margin="normal"
+        readOnly
       />
-      <TextField
+      <CustomTextField
         label="Armor Class"
         name="armorClass"
         type="number"
         value={character.armorClass}
-        InputProps={{ readOnly: true }}
-        fullWidth
-        margin="normal"
+        readOnly
       />
-      <TextField
+      <CustomTextField
         label="Proficiency Bonus"
         name="proficiencyBonus"
         type="number"
         value={character.proficiencyBonus}
-        InputProps={{ readOnly: true }}
-        fullWidth
-        margin="normal"
+        readOnly
       />
-      <TextField
+      <CustomTextField
         label="Experience"
         name="experience"
         type="number"
         value={character.experience}
         onChange={handleChange}
-        fullWidth
-        margin="normal"
         helperText={nextLevelExperience !== null ? `Next level at ${nextLevelExperience} XP` : 'Max level reached'}
+      />
+      <Typography variant="h6" gutterBottom className="heading">
+        Hit Points
+      </Typography>
+      <RadioGroup
+        name="hpCalcMethod"
+        value={character.hpCalcMethod}
+        onChange={handleHPMethodChange}
+      >
+        <FormControlLabel value="maximum" control={<Radio />} label="Maximum" />
+        <FormControlLabel value="average" control={<Radio />} label="Average" />
+        <FormControlLabel value="random" control={<Radio />} label="Random" />
+      </RadioGroup>
+      <CustomTextField
+        label="Hit Points"
+        name="hitPoints"
+        type="number"
+        value={character.hitPoints}
+        readOnly
+      />
+      <CustomTextField
+        label="Current HP"
+        name="currentHP"
+        type="number"
+        value={character.currentHP}
+        onChange={handleChange}
       />
     </Box>
   );

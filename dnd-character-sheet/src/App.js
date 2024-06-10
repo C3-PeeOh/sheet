@@ -4,6 +4,7 @@ import AttributesBlock from './components/AttributesBlock';
 import SkillsBlock from './components/SkillsBlock';
 import SavingThrowsBlock from './components/SavingThrowsBlock';
 import races from './data/races';
+import classes from './data/classes';
 import skills from './data/skills';
 import attributes from './data/attributes';
 import Container from '@mui/material/Container';
@@ -35,8 +36,12 @@ function App() {
       acc[attr] = false;
       return acc;
     }, {}),
+    hitPoints: 0,
+    currentHP: 0,
+    hpCalcMethod: 'maximum',
   });
   const [previousRace, setPreviousRace] = useState(null);
+  const [previousClass, setPreviousClass] = useState(null);
 
   useEffect(() => {
     const level = getLevelFromExperience(character.experience);
@@ -47,6 +52,10 @@ function App() {
       proficiencyBonus: proficiencyBonus,
     }));
   }, [character.experience]);
+
+  useEffect(() => {
+    calculateHitPoints();
+  }, [character.level, character.attributes.constitution, character.class, character.hpCalcMethod]);
 
   const handleCharacterChange = (field, value) => {
     setCharacter((prevCharacter) => ({
@@ -121,6 +130,69 @@ function App() {
     }
   };
 
+  const handleClassChange = (className) => {
+    const selectedClass = classes.find((cls) => cls.name === className);
+
+    if (selectedClass) {
+      // Revert the previous class's saving throw bonuses
+      const updatedSavingThrows = { ...character.savingThrows };
+      if (previousClass) {
+        previousClass.savingThrows.forEach((throwName) => {
+          updatedSavingThrows[throwName] = false;
+        });
+      }
+
+      // Apply the new class's saving throw bonuses
+      selectedClass.savingThrows.forEach((throwName) => {
+        updatedSavingThrows[throwName] = true;
+      });
+
+      setCharacter({
+        ...character,
+        class: selectedClass.name,
+        savingThrows: updatedSavingThrows,
+      });
+
+      // Update the previous class
+      setPreviousClass(selectedClass);
+    }
+  };
+
+  const calculateHitPoints = () => {
+    const selectedClass = classes.find((cls) => cls.name === character.class);
+    if (!selectedClass) return;
+
+    const conModifier = calculateModifier(character.attributes.constitution);
+    const hitDie = selectedClass.hitDie;
+
+    let hitPoints = hitDie + conModifier;
+
+    if (character.level > 1) {
+      for (let level = 2; level <= character.level; level++) {
+        if (character.hpCalcMethod === 'maximum') {
+          hitPoints += hitDie + conModifier;
+        } else if (character.hpCalcMethod === 'average') {
+          hitPoints += Math.floor(hitDie / 2) + 1 + conModifier;
+        } else if (character.hpCalcMethod === 'random') {
+          hitPoints += Math.floor(Math.random() * hitDie) + 1 + conModifier;
+        }
+      }
+    }
+
+    setCharacter((prevCharacter) => ({
+      ...prevCharacter,
+      hitPoints: hitPoints,
+      currentHP: hitPoints,
+    }));
+  };
+
+  const handleHPMethodChange = (method) => {
+    setCharacter((prevCharacter) => ({
+      ...prevCharacter,
+      hpCalcMethod: method,
+    }));
+  };
+
   const saveCharacter = () => {
     localStorage.setItem('character', JSON.stringify(character));
     alert('Character saved!');
@@ -137,12 +209,12 @@ function App() {
   };
 
   return (
-    <Container>
-      <Box mt={4}>
+    <Container className="container">
+      <Box className="box">
         <Typography variant="h3" gutterBottom>
           Dungeons & Dragons 5e Character Sheet
         </Typography>
-        <CharacterInfo character={character} onCharacterChange={handleCharacterChange} onRaceChange={handleRaceChange} />
+        <CharacterInfo character={character} onCharacterChange={handleCharacterChange} onRaceChange={handleRaceChange} onClassChange={handleClassChange} />
         <AttributesBlock attributes={character.attributes} onAttributeChange={handleAttributeChange} />
         <SkillsBlock 
           skills={character.skills} 
@@ -156,7 +228,7 @@ function App() {
           proficiencyBonus={character.proficiencyBonus} 
           onSaveThrowChange={handleSaveThrowChange} 
         />
-        <Box mt={4} display="flex" justifyContent="space-between">
+        <Box className="button-container">
           <Button variant="contained" color="primary" onClick={saveCharacter}>
             Save Character
           </Button>
