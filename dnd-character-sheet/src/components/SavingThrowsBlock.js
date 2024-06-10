@@ -11,21 +11,21 @@ function SavingThrowsBlock({ savingThrows, attributes, proficiencyBonus, onSaveT
   };
 
   return (
-    <Box mb={4}>
-      <Typography variant="h5" gutterBottom>
+    <Box className="box">
+      <Typography variant="h5" gutterBottom className="heading">
         Saving Throws
       </Typography>
       {Object.keys(attributes).map((attribute) => {
         const modifier = calculateModifier(attributes[attribute]);
         const value = modifier + (savingThrows[attribute] ? Number(proficiencyBonus) : 0);
         return (
-          <Box key={attribute} display="flex" alignItems="center" mb={2}>
+          <Box key={attribute} className="flex-container">
             <Checkbox
               name={attribute}
               checked={savingThrows[attribute]}
               onChange={handleCheckboxChange}
             />
-            <Typography variant="body1" style={{ marginRight: '20px' }}>
+            <Typography variant="body1" className="margin-right">
               {attribute.charAt(0).toUpperCase() + attribute.slice(1)}:
             </Typography>
             <Typography variant="body1">

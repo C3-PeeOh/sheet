@@ -40,4 +40,3 @@ function SkillsBlock({ skills: characterSkills, attributes, proficiencyBonus, on
 }
 
 export default SkillsBlock;
-``
