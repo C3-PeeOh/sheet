@@ -40,8 +40,8 @@ function CharacterInfo({ character, onCharacterChange, onRaceChange }) {
   const nextLevelExperience = getNextLevelExperience(character.level);
 
   return (
-    <Box mb={4}>
-      <Typography variant="h5" gutterBottom>
+    <Box className="box">
+      <Typography variant="h5" gutterBottom className="heading">
         Character Info
       </Typography>
       <TextField
@@ -53,6 +53,7 @@ function CharacterInfo({ character, onCharacterChange, onRaceChange }) {
         helperText={errors.name}
         fullWidth
         margin="normal"
+        className="input"
       />
       <TextField
         label="Class"
@@ -63,6 +64,7 @@ function CharacterInfo({ character, onCharacterChange, onRaceChange }) {
         helperText={errors.class}
         fullWidth
         margin="normal"
+        className="input"
       />
       <TextField
         label="Level"
@@ -72,8 +74,9 @@ function CharacterInfo({ character, onCharacterChange, onRaceChange }) {
         InputProps={{ readOnly: true }}
         fullWidth
         margin="normal"
+        className="input textfield-readonly"
       />
-      <FormControl fullWidth margin="normal">
+      <FormControl fullWidth margin="normal" className="form-control">
         <InputLabel shrink>Race</InputLabel>
         <Select
           label="Race"
@@ -99,6 +102,7 @@ function CharacterInfo({ character, onCharacterChange, onRaceChange }) {
         InputProps={{ readOnly: true }}
         fullWidth
         margin="normal"
+        className="input textfield-readonly"
       />
       <TextField
         label="Speed"
@@ -108,6 +112,7 @@ function CharacterInfo({ character, onCharacterChange, onRaceChange }) {
         InputProps={{ readOnly: true }}
         fullWidth
         margin="normal"
+        className="input textfield-readonly"
       />
       <TextField
         label="Initiative"
@@ -117,6 +122,7 @@ function CharacterInfo({ character, onCharacterChange, onRaceChange }) {
         InputProps={{ readOnly: true }}
         fullWidth
         margin="normal"
+        className="input textfield-readonly"
       />
       <TextField
         label="Armor Class"
@@ -126,6 +132,7 @@ function CharacterInfo({ character, onCharacterChange, onRaceChange }) {
         InputProps={{ readOnly: true }}
         fullWidth
         margin="normal"
+        className="input textfield-readonly"
       />
       <TextField
         label="Proficiency Bonus"
@@ -135,6 +142,7 @@ function CharacterInfo({ character, onCharacterChange, onRaceChange }) {
         InputProps={{ readOnly: true }}
         fullWidth
         margin="normal"
+        className="input textfield-readonly"
       />
       <TextField
         label="Experience"
@@ -144,7 +152,9 @@ function CharacterInfo({ character, onCharacterChange, onRaceChange }) {
         onChange={handleChange}
         fullWidth
         margin="normal"
+        className="input"
         helperText={nextLevelExperience !== null ? `Next level at ${nextLevelExperience} XP` : 'Max level reached'}
+        FormHelperTextProps={{ className: 'helper-text' }}
       />
     </Box>
   );

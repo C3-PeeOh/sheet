@@ -24,12 +24,12 @@ function AttributesBlock({ attributes, onAttributeChange }) {
   };
 
   return (
-    <Box mb={4}>
-      <Typography variant="h5" gutterBottom>
+    <Box className="box">
+      <Typography variant="h5" gutterBottom className="heading">
         Attributes
       </Typography>
       {Object.keys(attributes).map((attribute) => (
-        <Box key={attribute} display="flex" alignItems="center" mb={2}>
+        <Box key={attribute} className="flex-container">
           <TextField
             label={attribute.charAt(0).toUpperCase() + attribute.slice(1)}
             name={attribute}
@@ -38,7 +38,8 @@ function AttributesBlock({ attributes, onAttributeChange }) {
             onChange={handleChange}
             error={!!errors[attribute]}
             helperText={errors[attribute]}
-            style={{ marginRight: '20px' }}
+            className="input margin-right"
+            fullWidth
           />
           <Typography variant="body1">
             Modifier: {calculateModifier(attributes[attribute])}

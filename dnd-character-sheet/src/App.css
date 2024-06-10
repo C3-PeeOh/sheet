@@ -45,3 +45,51 @@ body {
   padding: 0;
 }
 
+/* General */
+.container {
+  margin-top: 2rem;
+}
+
+.box {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.heading {
+  margin-bottom: 1rem;
+}
+
+.input {
+  margin-bottom: 1rem;
+}
+
+.form-control {
+  margin-bottom: 1rem;
+}
+
+.textfield-readonly .MuiInputBase-root.Mui-disabled {
+  color: rgba(0, 0, 0, 0.87); /* Make sure readonly fields use the standard text color */
+}
+
+.helper-text {
+  margin-top: -0.75rem;
+  margin-bottom: 1rem;
+}
+
+.flex-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.margin-right {
+  margin-right: 1rem;
+}
+
+.button-container {
+  margin-top: 2rem;
+  display: flex;
+  justify-content: space-between;
+}
+
+
