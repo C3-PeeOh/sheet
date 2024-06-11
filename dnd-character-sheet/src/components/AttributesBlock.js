@@ -7,34 +7,70 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Radio from '@mui/material/Radio';
 import { calculateModifier } from '../utils';
 
+function AttributeInput({ attribute, value, onChange, error }) {
+  return (
+    <Box key={attribute} className="flex-container">
+      <TextField
+        label={attribute.charAt(0).toUpperCase() + attribute.slice(1)}
+        name={attribute}
+        type="number"
+        value={value}
+        onChange={onChange}
+        error={!!error}
+        helperText={error}
+        className="input margin-right"
+        fullWidth
+      />
+      <Typography variant="body1">
+        Modifier: {calculateModifier(value)}
+      </Typography>
+    </Box>
+  );
+}
+
+function ModeSelector({ mode, onChange }) {
+  return (
+    <RadioGroup name="mode" value={mode} onChange={onChange} row>
+      <FormControlLabel value="free" control={<Radio />} label="Free Mode" />
+      <FormControlLabel value="point-buy" control={<Radio />} label="Point Buy Mode" />
+    </RadioGroup>
+  );
+}
+
+function PointsDisplay({ mode, points }) {
+  return (
+    <Typography variant="h6" gutterBottom className="heading">
+      Points to Distribute: {mode === 'free' ? '∞' : points}
+    </Typography>
+  );
+}
+
 function AttributesBlock({ attributes, onAttributeChange }) {
   const [errors, setErrors] = useState({});
   const [pointsToDistribute, setPointsToDistribute] = useState(27);
   const [mode, setMode] = useState('free');
-  const [baseAttributes, setBaseAttributes] = useState({ ...attributes });
 
   useEffect(() => {
     if (mode === 'point-buy') {
       setPointsToDistribute(27);
-      const newAttributes = { ...baseAttributes };
-      Object.keys(newAttributes).forEach((attribute) => {
+      const newAttributes = {};
+      Object.keys(attributes).forEach((attribute) => {
         newAttributes[attribute] = 8;
       });
-      setBaseAttributes(newAttributes);
       applyBonuses(newAttributes);
+      onAttributeChange(newAttributes);
     } else {
-      const newAttributes = { ...baseAttributes };
-      Object.keys(newAttributes).forEach((attribute) => {
+      const newAttributes = {};
+      Object.keys(attributes).forEach((attribute) => {
         newAttributes[attribute] = 10;
       });
-      setBaseAttributes(newAttributes);
       applyBonuses(newAttributes);
+      onAttributeChange(newAttributes);
     }
   }, [mode]);
 
   const applyBonuses = (baseAttrs) => {
     const updatedAttributes = { ...baseAttrs };
-    // Apply racial and class bonuses here if needed
     onAttributeChange(updatedAttributes);
   };
 
@@ -91,36 +127,16 @@ function AttributesBlock({ attributes, onAttributeChange }) {
       <Typography variant="h5" gutterBottom className="heading">
         Attributes
       </Typography>
-      <RadioGroup
-        name="mode"
-        value={mode}
-        onChange={handleModeChange}
-        row
-      >
-        <FormControlLabel value="free" control={<Radio />} label="Free Mode" />
-        <FormControlLabel value="point-buy" control={<Radio />} label="Point Buy Mode" />
-      </RadioGroup>
-      <Typography variant="h6" gutterBottom className="heading">
-        Points to Distribute: {mode === 'free' ? '∞' : pointsToDistribute}
-      </Typography>
+      <ModeSelector mode={mode} onChange={handleModeChange} />
+      <PointsDisplay mode={mode} points={pointsToDistribute} />
       {Object.keys(attributes).map((attribute) => (
-        <Box key={attribute} className="flex-container">
-          <TextField
-            label={attribute.charAt(0).toUpperCase() + attribute.slice(1)}
-            name={attribute}
-            type="number"
-            value={attributes[attribute]}
-            onChange={handleChange}
-            error={!!errors[attribute]}
-            helperText={errors[attribute]}
-            className="input margin-right"
-            fullWidth
-            InputProps={{ inputProps: { min: mode === 'point-buy' ? 8 : 1, max: mode === 'point-buy' ? 18 : 20 } }}
-          />
-          <Typography variant="body1">
-            Modifier: {calculateModifier(attributes[attribute])}
-          </Typography>
-        </Box>
+        <AttributeInput
+          key={attribute}
+          attribute={attribute}
+          value={attributes[attribute]}
+          onChange={handleChange}
+          error={errors[attribute]}
+        />
       ))}
     </Box>
   );

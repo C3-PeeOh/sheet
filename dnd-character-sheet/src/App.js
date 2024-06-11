@@ -214,8 +214,16 @@ function App() {
         <Typography variant="h3" gutterBottom>
           Dungeons & Dragons 5e Character Sheet
         </Typography>
-        <CharacterInfo character={character} onCharacterChange={handleCharacterChange} onRaceChange={handleRaceChange} onClassChange={handleClassChange} />
-        <AttributesBlock attributes={character.attributes} onAttributeChange={handleAttributeChange} />
+        <CharacterInfo 
+          character={character} 
+          onCharacterChange={handleCharacterChange} 
+          onRaceChange={handleRaceChange} 
+          onClassChange={handleClassChange} 
+        />
+        <AttributesBlock 
+          attributes={character.attributes} 
+          onAttributeChange={handleAttributeChange} 
+        />
         <SkillsBlock 
           skills={character.skills} 
           attributes={character.attributes} 
