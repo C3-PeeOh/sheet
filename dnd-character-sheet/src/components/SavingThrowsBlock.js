@@ -33,7 +33,7 @@ function SavingThrowsBlock({ savingThrows, attributes, proficiencyBonus, onSaveT
       <Typography variant="h5" gutterBottom className="heading">
         Saving Throws
       </Typography>
-      {Object.keys(attributes).map((attribute) => (
+      {Object.keys(attributes).filter(attr => attr in savingThrows).map((attribute) => (
         <Box key={attribute} className="flex-container">
           <SavingThrowCheckbox
             attribute={attribute}
