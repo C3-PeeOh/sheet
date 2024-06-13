@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react';
+import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import Checkbox from '@mui/material/Checkbox';
 import Typography from '@mui/material/Typography';
@@ -40,12 +41,15 @@ function SavingThrowsBlock({ savingThrows, attributes, proficiencyBonus, onSaveT
             checked={savingThrows[attribute]}
             onChange={onSaveThrowChange}
           />
-          <Typography variant="body1" className="margin-right">
-            {attribute.charAt(0).toUpperCase() + attribute.slice(1)}:
-          </Typography>
-          <Typography variant="body1">
-            {modifierValues[attribute]}
-          </Typography>
+        <TextField
+          label={attribute.charAt(0).toUpperCase() + attribute.slice(1)}
+          value={modifierValues[attribute]}
+          className="input margin-right"
+          InputProps={{
+            readOnly: true,
+            style: { height: '100%' }
+          }}
+        />
         </Box>
       ))}
     </Box>

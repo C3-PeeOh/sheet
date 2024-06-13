@@ -18,15 +18,15 @@ function App() {
   const [character, setCharacter] = useState({
     name: '',
     class: '',
-    level: 1,
+    level: '',
     race: '',
     size: '',
     background: '',
-    speed: 30,
-    initiative: 0,
-    armorClass: 10,
-    proficiencyBonus: 2,
-    experience: 0,
+    speed: '',
+    initiative: '',
+    armorClass: '',
+    proficiencyBonus: '',
+    experience: '',
     attributes: { ...attributes },
     skills: Object.keys(skills).reduce((acc, skill) => {
       acc[skill] = false;
@@ -64,18 +64,18 @@ function App() {
     }));
   };
 
-  const handleAttributeChange = (attribute, value) => {
+  const handleAttributeChange = (newAttributes) => {
     setCharacter((prevCharacter) => {
-      const newAttributes = {
+      const updatedAttributes = {
         ...prevCharacter.attributes,
-        [attribute]: value,
+        ...newAttributes,
       };
 
       return {
         ...prevCharacter,
-        attributes: newAttributes,
-        initiative: calculateModifier(newAttributes.dexterity),
-        armorClass: 10 + calculateModifier(newAttributes.dexterity),
+        attributes: updatedAttributes,
+        initiative: calculateModifier(updatedAttributes.dexterity),
+        armorClass: 10 + calculateModifier(updatedAttributes.dexterity),
       };
     });
   };

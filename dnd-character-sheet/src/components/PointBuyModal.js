@@ -62,7 +62,7 @@ const PointBuyModal = ({ initialAttributes, onConfirm, onCancel }) => {
             margin="normal"
           />
         ))}
-        <Button variant="contained" onClick={handleConfirm}>
+        <Button variant="contained" onClick={handleConfirm} style={{ marginRight: '10px' }}>
           Confirm
         </Button>
         <Button variant="contained" onClick={onCancel}>

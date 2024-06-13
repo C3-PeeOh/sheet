@@ -2,6 +2,7 @@ import React from 'react';
 import Box from '@mui/material/Box';
 import Checkbox from '@mui/material/Checkbox';
 import Typography from '@mui/material/Typography';
+import TextField from '@mui/material/TextField';
 import { calculateModifier } from '../utils';
 import skills from '../data/skills';
 
@@ -21,17 +22,22 @@ function SkillsBlock({ skills: characterSkills, attributes, proficiencyBonus, on
         const value = modifier + (characterSkills[skill] ? Number(proficiencyBonus) : 0);
         return (
           <Box key={skill} className="flex-container">
-            <Checkbox
-              name={skill}
-              checked={characterSkills[skill]}
-              onChange={handleCheckboxChange}
-            />
-            <Typography variant="body1" className="margin-right">
-              {skill.charAt(0).toUpperCase() + skill.slice(1).replace(/([A-Z])/g, ' $1').trim()}:
-            </Typography>
-            <Typography variant="body1">
-              {value}
-            </Typography>
+            <Box className="button-container">
+              <Checkbox
+                name={skill}
+                checked={characterSkills[skill]}
+                onChange={handleCheckboxChange}
+              />
+              <TextField
+                label={skill.charAt(0).toUpperCase() + skill.slice(1)}
+                value={value}
+                className="input margin-right"
+                InputProps={{
+                  readOnly: true,
+                  style: { height: '100%' }
+                }}
+              />
+            </Box>
           </Box>
         );
       })}

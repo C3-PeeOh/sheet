@@ -1,11 +1,17 @@
-const attributes = {
-    strength: 10,
-    dexterity: 10,
-    constitution: 10,
-    intelligence: 10,
-    wisdom: 10,
-    charisma: 10,
-  };
-  
-  export default attributes;
+const defaultValue = 10;
+const attributeNames = [
+  'strength',
+  'dexterity',
+  'constitution',
+  'intelligence',
+  'wisdom',
+  'charisma'
+];
+
+const attributes = attributeNames.reduce((acc, attributeName) => {
+  acc[attributeName] = defaultValue;
+  return acc;
+}, {});
+
+export default attributes;
   
