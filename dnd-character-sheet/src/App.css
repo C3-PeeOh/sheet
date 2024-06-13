@@ -87,8 +87,8 @@ body {
 }
 
 .button-container {
-  margin-top: 2rem;
   display: flex;
+  flex-direction: column;
   justify-content: space-between;
 }
 
@@ -102,4 +102,39 @@ body {
   border: 2px solid #000;
   box-shadow: 24px;
   padding: 16px;
+}
+
+.attribute-container {
+  position: relative;
+}
+
+.attribute-box {
+  position: relative;
+  margin-right: 1rem;
+  flex-grow: 1;
+}
+
+.modifier-circle {
+  position: absolute;
+  bottom: -10px;
+  right: -10px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #f0f0f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #ccc;
+}
+
+/* Remove native increment/decrement arrows in number input fields */
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type=number] {
+  -moz-appearance: textfield;
 }

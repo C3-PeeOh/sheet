@@ -23,10 +23,7 @@ const PointBuyModal = ({ initialAttributes, onConfirm, onCancel }) => {
   });
   const [pointsLeft, setPointsLeft] = useState(27);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    const intValue = parseInt(value);
-
+  const handleChange = (name, intValue) => {
     const oldScore = attributes[name];
     let newPointsLeft = pointsLeft + getPointCost(oldScore) - getPointCost(intValue);
 
@@ -34,6 +31,14 @@ const PointBuyModal = ({ initialAttributes, onConfirm, onCancel }) => {
       setAttributes({ ...attributes, [name]: intValue });
       setPointsLeft(newPointsLeft);
     }
+  };
+
+  const handleIncrement = (attribute) => {
+    handleChange(attribute, attributes[attribute] + 1);
+  };
+
+  const handleDecrement = (attribute) => {
+    handleChange(attribute, attributes[attribute] - 1);
   };
 
   const handleConfirm = () => {
@@ -50,17 +55,34 @@ const PointBuyModal = ({ initialAttributes, onConfirm, onCancel }) => {
           Points Left: {pointsLeft}
         </Typography>
         {Object.keys(attributes).map((attribute) => (
-          <TextField
-            key={attribute}
-            label={attribute.charAt(0).toUpperCase() + attribute.slice(1)}
-            name={attribute}
-            type="number"
-            value={attributes[attribute]}
-            onChange={handleChange}
-            inputProps={{ min: 8, max: 18 }}
-            fullWidth
-            margin="normal"
-          />
+          <Box key={attribute} className="flex-container">
+            <Box className="button-container">
+            <Button
+                variant="contained"
+                onClick={() => handleIncrement(attribute)}
+                style={{ height: '50%', width: '100%' }}
+              >
+                +
+              </Button>
+              <Button
+                variant="contained"
+                onClick={() => handleDecrement(attribute)}
+                style={{ height: '50%', width: '100%' }}
+              >
+                -
+              </Button>
+            </Box>
+            <TextField
+              label={attribute.charAt(0).toUpperCase() + attribute.slice(1)}
+              name={attribute}
+              type="number"
+              value={attributes[attribute]}
+              onChange={(e) => handleChange(attribute, parseInt(e.target.value))}
+              inputProps={{ min: 8, max: 18, readOnly: true }}
+              fullWidth
+              margin="normal"
+            />
+          </Box>
         ))}
         <Button variant="contained" onClick={handleConfirm} style={{ marginRight: '10px' }}>
           Confirm
