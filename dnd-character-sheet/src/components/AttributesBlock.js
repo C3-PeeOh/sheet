@@ -1,36 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import RadioGroup from '@mui/material/RadioGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Radio from '@mui/material/Radio';
+import Button from '@mui/material/Button';
 import { calculateModifier } from '../utils';
+import PointBuyModal from './PointBuyModal';
+import attributes from '../data/attributes';
+
+const initialAttributes = { ...attributes };
 
 function AttributesBlock({ attributes, onAttributeChange }) {
   const [errors, setErrors] = useState({});
-  const [pointsToDistribute, setPointsToDistribute] = useState(27);
-  const [mode, setMode] = useState('free');
-  const [baseAttributes, setBaseAttributes] = useState({ ...attributes });
-
-  useEffect(() => {
-    if (mode === 'point-buy') {
-      setPointsToDistribute(27);
-      const newAttributes = { ...baseAttributes };
-      Object.keys(newAttributes).forEach((attribute) => {
-        newAttributes[attribute] = 8;
-      });
-      setBaseAttributes(newAttributes);
-      applyBonuses(newAttributes);
-    } else {
-      const newAttributes = { ...baseAttributes };
-      Object.keys(newAttributes).forEach((attribute) => {
-        newAttributes[attribute] = 10;
-      });
-      setBaseAttributes(newAttributes);
-      applyBonuses(newAttributes);
-    }
-  }, [mode]);
+  const [isEditable, setIsEditable] = useState(true);
+  const [showPointBuyModal, setShowPointBuyModal] = useState(false);
 
   const applyBonuses = (baseAttrs) => {
     const updatedAttributes = { ...baseAttrs };
@@ -43,47 +25,43 @@ function AttributesBlock({ attributes, onAttributeChange }) {
     const intValue = parseInt(value);
 
     let newErrors = { ...errors };
-    if (mode === 'point-buy' && (intValue < 8 || intValue > 18)) {
-      newErrors[name] = `${name} must be between 8 and 18`;
-    } else if (mode === 'free' && (intValue < 1 || intValue > 20)) {
+    if (intValue < 1 || intValue > 20) {
       newErrors[name] = `${name} must be between 1 and 20`;
     } else {
       delete newErrors[name];
     }
     setErrors(newErrors);
 
-    if (mode === 'point-buy') {
-      const baseScore = attributes[name];
-      let pointCost = 0;
+    const newAttributes = { ...attributes, [name]: intValue };
+    onAttributeChange(newAttributes);
+  };
 
-      if (intValue > baseScore) {
-        for (let i = baseScore + 1; i <= intValue; i++) {
-          pointCost += getPointCost(i);
-        }
-      } else if (intValue < baseScore) {
-        for (let i = baseScore; i > intValue; i--) {
-          pointCost -= getPointCost(i);
-        }
-      }
+  const handleLockToggle = () => {
+    setIsEditable(!isEditable);
+  };
 
-      if (pointsToDistribute - pointCost >= 0) {
-        onAttributeChange(name, intValue);
-        setPointsToDistribute(pointsToDistribute - pointCost);
-      }
-    } else {
-      onAttributeChange(name, intValue);
+  const handlePointBuyClick = () => {
+    setShowPointBuyModal(true);
+  };
+
+  const handlePointBuyConfirm = (newAttributes) => {
+    const updatedAttributes = { ...attributes, ...newAttributes };
+    applyBonuses(updatedAttributes);
+    setShowPointBuyModal(false);
+  };
+
+  const incrementAttribute = (attribute) => {
+    const newValue = attributes[attribute] + 1;
+    if (newValue <= 20) {
+      onAttributeChange(attribute, newValue);
     }
   };
 
-  const getPointCost = (score) => {
-    if (score >= 8 && score <= 13) return 1;
-    if (score === 14 || score === 15) return 2;
-    if (score >= 16) return 3;
-    return 0;
-  };
-
-  const handleModeChange = (e) => {
-    setMode(e.target.value);
+  const decrementAttribute = (attribute) => {
+    const newValue = attributes[attribute] - 1;
+    if (newValue >= 1) {
+      onAttributeChange(attribute, newValue);
+    }
   };
 
   return (
@@ -91,20 +69,32 @@ function AttributesBlock({ attributes, onAttributeChange }) {
       <Typography variant="h5" gutterBottom className="heading">
         Attributes
       </Typography>
-      <RadioGroup
-        name="mode"
-        value={mode}
-        onChange={handleModeChange}
-        row
-      >
-        <FormControlLabel value="free" control={<Radio />} label="Free Mode" />
-        <FormControlLabel value="point-buy" control={<Radio />} label="Point Buy Mode" />
-      </RadioGroup>
-      <Typography variant="h6" gutterBottom className="heading">
-        Points to Distribute: {mode === 'free' ? '∞' : pointsToDistribute}
-      </Typography>
-      {Object.keys(attributes).map((attribute) => (
+      <Button variant="contained" onClick={handleLockToggle}>
+        {isEditable ? 'Lock' : 'Unlock'}
+      </Button>
+      <Button variant="contained" onClick={handlePointBuyClick}>
+        Point Buy Mode
+      </Button>
+      {Object.keys(attributes).filter(attr => initialAttributes.hasOwnProperty(attr)).map((attribute) => (
         <Box key={attribute} className="flex-container">
+          <Box className="button-container">
+            <Button
+              variant="contained"
+              disabled={!isEditable}
+              onClick={() => decrementAttribute(attribute)}
+              style={{ height: '50%', width: '100%' }}
+            >
+              -
+            </Button>
+            <Button
+              variant="contained"
+              disabled={!isEditable}
+              onClick={() => incrementAttribute(attribute)}
+              style={{ height: '50%', width: '100%' }}
+            >
+              +
+            </Button>
+          </Box>
           <TextField
             label={attribute.charAt(0).toUpperCase() + attribute.slice(1)}
             name={attribute}
@@ -115,13 +105,31 @@ function AttributesBlock({ attributes, onAttributeChange }) {
             helperText={errors[attribute]}
             className="input margin-right"
             fullWidth
-            InputProps={{ inputProps: { min: mode === 'point-buy' ? 8 : 1, max: mode === 'point-buy' ? 18 : 20 } }}
+            InputProps={{
+              readOnly: !isEditable,
+              inputProps: { min: 1, max: 20 },
+              style: { height: '100%' }
+            }}
           />
-          <Typography variant="body1">
-            Modifier: {calculateModifier(attributes[attribute])}
-          </Typography>
+          <TextField
+            label="Modifier"
+            value={calculateModifier(attributes[attribute])}
+            className="input margin-right"
+            fullWidth
+            InputProps={{
+              readOnly: true,
+              style: { height: '100%' }
+            }}
+          />
         </Box>
       ))}
+      {showPointBuyModal && (
+        <PointBuyModal
+          initialAttributes={attributes}
+          onConfirm={handlePointBuyConfirm}
+          onCancel={() => setShowPointBuyModal(false)}
+        />
+      )}
     </Box>
   );
 }
