@@ -6,16 +6,25 @@ import Button from '@mui/material/Button';
 import { calculateModifier } from '../utils';
 import PointBuyModal from './PointBuyModal';
 import attributes from '../data/attributes';
+import races from '../data/races';
 
 const initialAttributes = { ...attributes };
 
-function AttributesBlock({ attributes, onAttributeChange }) {
+function AttributesBlock({ attributes, onAttributeChange, race }) {
   const [errors, setErrors] = useState({});
   const [isEditable, setIsEditable] = useState(true);
   const [showPointBuyModal, setShowPointBuyModal] = useState(false);
 
   const applyBonuses = (baseAttrs) => {
     const updatedAttributes = { ...baseAttrs };
+    if (race) {
+      const selectedRace = races.find(r => r.name === race);
+      if (selectedRace) {
+        Object.keys(selectedRace.abilityBonuses).forEach((key) => {
+          updatedAttributes[key] += selectedRace.abilityBonuses[key];
+        });
+      }
+    }
     onAttributeChange(updatedAttributes);
   };
 
@@ -24,8 +33,8 @@ function AttributesBlock({ attributes, onAttributeChange }) {
     const intValue = parseInt(value);
 
     let newErrors = { ...errors };
-    if (intValue < 1 || intValue > 20) {
-      newErrors[name] = `${name} must be between 1 and 20`;
+    if (intValue < 0 || intValue > 99) {
+      newErrors[name] = `${name} must be between 0 and 99`;
     } else {
       delete newErrors[name];
     }
@@ -51,7 +60,7 @@ function AttributesBlock({ attributes, onAttributeChange }) {
 
   const incrementAttribute = (attribute) => {
     const newValue = attributes[attribute] + 1;
-    if (newValue <= 20) {
+    if (newValue <= 99) {
       const newAttributes = { ...attributes, [attribute]: newValue };
       onAttributeChange(newAttributes);
     }
@@ -59,7 +68,7 @@ function AttributesBlock({ attributes, onAttributeChange }) {
 
   const decrementAttribute = (attribute) => {
     const newValue = attributes[attribute] - 1;
-    if (newValue >= 1) {
+    if (newValue >= 0) {
       const newAttributes = { ...attributes, [attribute]: newValue };
       onAttributeChange(newAttributes);
     }
@@ -79,7 +88,7 @@ function AttributesBlock({ attributes, onAttributeChange }) {
       {Object.keys(attributes).filter(attr => initialAttributes.hasOwnProperty(attr)).map((attribute) => (
         <Box key={attribute} className="flex-container attribute-container">
           <Box className="button-container">
-          <Button
+            <Button
               variant="contained"
               disabled={!isEditable}
               onClick={() => incrementAttribute(attribute)}
@@ -109,7 +118,7 @@ function AttributesBlock({ attributes, onAttributeChange }) {
               fullWidth
               InputProps={{
                 readOnly: !isEditable,
-                inputProps: { min: 1, max: 20 },
+                inputProps: { min: 0, max: 99 },
                 style: { height: '100%' }
               }}
             />

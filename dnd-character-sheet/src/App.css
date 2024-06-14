@@ -90,6 +90,14 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  height: 100%;
+}
+
+.button-container button {
+  width: 48%;
+  height: 48%;
+  padding: 1px;
+  margin-bottom: 2px;
 }
 
 .modal {
@@ -112,6 +120,7 @@ body {
   position: relative;
   margin-right: 1rem;
   flex-grow: 1;
+  width: 80px; /* Adjust width to make it a square */
 }
 
 .modifier-circle {
@@ -126,15 +135,4 @@ body {
   align-items: center;
   justify-content: center;
   border: 1px solid #ccc;
-}
-
-/* Remove native increment/decrement arrows in number input fields */
-input[type=number]::-webkit-outer-spin-button,
-input[type=number]::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-
-input[type=number] {
-  -moz-appearance: textfield;
 }
