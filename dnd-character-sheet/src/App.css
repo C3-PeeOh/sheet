@@ -87,9 +87,17 @@ body {
 }
 
 .button-container {
-  margin-top: 2rem;
   display: flex;
+  flex-direction: column;
   justify-content: space-between;
+  height: 100%;
+}
+
+.button-container button {
+  width: 48%;
+  height: 48%;
+  padding: 1px;
+  margin-bottom: 2px;
 }
 
 .modal {
@@ -102,4 +110,29 @@ body {
   border: 2px solid #000;
   box-shadow: 24px;
   padding: 16px;
+}
+
+.attribute-container {
+  position: relative;
+}
+
+.attribute-box {
+  position: relative;
+  margin-right: 1rem;
+  flex-grow: 1;
+  width: 80px; /* Adjust width to make it a square */
+}
+
+.modifier-circle {
+  position: absolute;
+  bottom: -10px;
+  right: -10px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #f0f0f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #ccc;
 }

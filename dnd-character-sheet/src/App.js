@@ -223,6 +223,7 @@ function App() {
         <AttributesBlock 
           attributes={character.attributes} 
           onAttributeChange={handleAttributeChange} 
+          race={character.race} 
         />
         <SkillsBlock 
           skills={character.skills} 

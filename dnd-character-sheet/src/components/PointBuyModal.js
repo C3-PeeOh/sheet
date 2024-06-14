@@ -8,7 +8,6 @@ import TextField from '@mui/material/TextField';
 const getPointCost = (score) => {
   if (score >= 8 && score <= 13) return 1;
   if (score === 14 || score === 15) return 2;
-  if (score >= 16) return 3;
   return 0;
 };
 
@@ -23,16 +22,31 @@ const PointBuyModal = ({ initialAttributes, onConfirm, onCancel }) => {
   });
   const [pointsLeft, setPointsLeft] = useState(27);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    const intValue = parseInt(value);
+  const handleIncrement = (attribute) => {
+    const oldValue = attributes[attribute];
+    const newValue = oldValue + 1;
+    const cost = getPointCost(newValue);
 
-    const oldScore = attributes[name];
-    let newPointsLeft = pointsLeft + getPointCost(oldScore) - getPointCost(intValue);
+    if (newValue <= 15 && pointsLeft >= cost) {
+      setAttributes((prevAttributes) => ({
+        ...prevAttributes,
+        [attribute]: newValue,
+      }));
+      setPointsLeft((prevPoints) => prevPoints - cost);
+    }
+  };
 
-    if (newPointsLeft >= 0 && intValue >= 8 && intValue <= 18) {
-      setAttributes({ ...attributes, [name]: intValue });
-      setPointsLeft(newPointsLeft);
+  const handleDecrement = (attribute) => {
+    const oldValue = attributes[attribute];
+    const newValue = oldValue - 1;
+    const cost = getPointCost(oldValue);
+
+    if (newValue >= 8) {
+      setAttributes((prevAttributes) => ({
+        ...prevAttributes,
+        [attribute]: newValue,
+      }));
+      setPointsLeft((prevPoints) => prevPoints + cost);
     }
   };
 
@@ -50,17 +64,33 @@ const PointBuyModal = ({ initialAttributes, onConfirm, onCancel }) => {
           Points Left: {pointsLeft}
         </Typography>
         {Object.keys(attributes).map((attribute) => (
-          <TextField
-            key={attribute}
-            label={attribute.charAt(0).toUpperCase() + attribute.slice(1)}
-            name={attribute}
-            type="number"
-            value={attributes[attribute]}
-            onChange={handleChange}
-            inputProps={{ min: 8, max: 18 }}
-            fullWidth
-            margin="normal"
-          />
+          <Box key={attribute} className="flex-container">
+            <Box className="button-container">
+              <Button
+                variant="contained"
+                onClick={() => handleIncrement(attribute)}
+                style={{ height: '50%', width: '100%' }}
+              >
+                +
+              </Button>
+              <Button
+                variant="contained"
+                onClick={() => handleDecrement(attribute)}
+                style={{ height: '50%', width: '100%' }}
+              >
+                -
+              </Button>
+            </Box>
+            <TextField
+              label={attribute.charAt(0).toUpperCase() + attribute.slice(1)}
+              name={attribute}
+              type="number"
+              value={attributes[attribute]}
+              inputProps={{ min: 8, max: 15, readOnly: true }}
+              fullWidth
+              margin="normal"
+            />
+          </Box>
         ))}
         <Button variant="contained" onClick={handleConfirm} style={{ marginRight: '10px' }}>
           Confirm
