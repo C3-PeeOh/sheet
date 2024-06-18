@@ -3,6 +3,7 @@ import CharacterInfo from './components/CharacterInfo';
 import AttributesBlock from './components/AttributesBlock';
 import SkillsBlock from './components/SkillsBlock';
 import SavingThrowsBlock from './components/SavingThrowsBlock';
+import Inventory from './components/Inventory';
 import races from './data/races';
 import classes from './data/classes';
 import skills from './data/skills';
@@ -39,6 +40,12 @@ function App() {
     hitPoints: 0,
     currentHP: 0,
     hpCalcMethod: 'maximum',
+    inventory: {
+      weapons: [],
+      armor: [],
+      coinPurse: { copper: 0, silver: 0, gold: 0, gemstones: [] },
+      gear: [],
+    },
   });
   const [previousRace, setPreviousRace] = useState(null);
   const [previousClass, setPreviousClass] = useState(null);
@@ -94,9 +101,19 @@ function App() {
     setCharacter((prevCharacter) => ({
       ...prevCharacter,
       savingThrows: {
-        ...prevCharacter.savingThrows,
-        [attribute]: value,
+        ...prevCharacter,
+        savingThrows: {
+          ...prevCharacter.savingThrows,
+          [attribute]: value,
+        },
       },
+    }));
+  };
+
+  const handleInventoryChange = (newInventory) => {
+    setCharacter((prevCharacter) => ({
+      ...prevCharacter,
+      inventory: newInventory,
     }));
   };
 
@@ -223,7 +240,7 @@ function App() {
         <AttributesBlock 
           attributes={character.attributes} 
           onAttributeChange={handleAttributeChange} 
-          race={character.race} 
+          race={character.race}
         />
         <SkillsBlock 
           skills={character.skills} 
@@ -236,6 +253,10 @@ function App() {
           attributes={character.attributes} 
           proficiencyBonus={character.proficiencyBonus} 
           onSaveThrowChange={handleSaveThrowChange} 
+        />
+        <Inventory 
+          inventory={character.inventory} 
+          onInventoryChange={handleInventoryChange}
         />
         <Box className="button-container">
           <Button variant="contained" color="primary" onClick={saveCharacter}>
