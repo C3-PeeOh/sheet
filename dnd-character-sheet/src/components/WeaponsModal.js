@@ -1,15 +1,15 @@
-import React, { useState } from 'react';
-import Modal from '@mui/material/Modal';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
-import weapons from '../data/weapons';
+import React, { useState } from "react";
+import Modal from "@mui/material/Modal";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
+import weapons from "../data/weapons";
 
 const WeaponsModal = ({ open, onClose, onAddWeapon }) => {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [filter, setFilter] = useState('');
-  const [sortOrder, setSortOrder] = useState('asc');
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filter, setFilter] = useState("");
+  const [sortOrder, setSortOrder] = useState("asc");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 25;
 
@@ -31,24 +31,25 @@ const WeaponsModal = ({ open, onClose, onAddWeapon }) => {
 
   const filteredWeapons = weapons
     .filter((weapon) => {
-      if (filter === 'simple') return weapon.type === 'simple';
-      if (filter === 'martial') return weapon.type === 'martial';
-      if (filter === 'melee') return !weapon.ranged;
-      if (filter === 'ranged') return weapon.ranged;
+      if (filter === "simple") return weapon.type === "simple";
+      if (filter === "martial") return weapon.type === "martial";
+      if (filter === "melee") return !weapon.ranged;
+      if (filter === "ranged") return weapon.ranged;
       return true;
     })
-    .filter((weapon) =>
-      weapon.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      weapon.description.toLowerCase().includes(searchTerm.toLowerCase())
+    .filter(
+      (weapon) =>
+        weapon.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        weapon.description.toLowerCase().includes(searchTerm.toLowerCase()),
     )
     .sort((a, b) => {
-      if (sortOrder === 'asc') return a.name.localeCompare(b.name);
+      if (sortOrder === "asc") return a.name.localeCompare(b.name);
       return b.name.localeCompare(a.name);
     });
 
   const displayedWeapons = filteredWeapons.slice(
     (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
+    currentPage * itemsPerPage,
   );
 
   return (
@@ -65,25 +66,43 @@ const WeaponsModal = ({ open, onClose, onAddWeapon }) => {
           margin="normal"
         />
         <Box className="button-container">
-          <Button variant="contained" onClick={() => handleFilterChange('all')}>
+          <Button variant="contained" onClick={() => handleFilterChange("all")}>
             All
           </Button>
-          <Button variant="contained" onClick={() => handleFilterChange('simple')}>
+          <Button
+            variant="contained"
+            onClick={() => handleFilterChange("simple")}
+          >
             Simple
           </Button>
-          <Button variant="contained" onClick={() => handleFilterChange('martial')}>
+          <Button
+            variant="contained"
+            onClick={() => handleFilterChange("martial")}
+          >
             Martial
           </Button>
-          <Button variant="contained" onClick={() => handleFilterChange('melee')}>
+          <Button
+            variant="contained"
+            onClick={() => handleFilterChange("melee")}
+          >
             Melee
           </Button>
-          <Button variant="contained" onClick={() => handleFilterChange('ranged')}>
+          <Button
+            variant="contained"
+            onClick={() => handleFilterChange("ranged")}
+          >
             Ranged
           </Button>
-          <Button variant="contained" onClick={() => handleSortOrderChange('asc')}>
+          <Button
+            variant="contained"
+            onClick={() => handleSortOrderChange("asc")}
+          >
             Sort A-Z
           </Button>
-          <Button variant="contained" onClick={() => handleSortOrderChange('desc')}>
+          <Button
+            variant="contained"
+            onClick={() => handleSortOrderChange("desc")}
+          >
             Sort Z-A
           </Button>
         </Box>
@@ -92,7 +111,11 @@ const WeaponsModal = ({ open, onClose, onAddWeapon }) => {
             <Typography variant="body1" component="div" className="weapon-name">
               <b>{weapon.name}</b>
             </Typography>
-            <Typography variant="body2" component="div" className="weapon-description">
+            <Typography
+              variant="body2"
+              component="div"
+              className="weapon-description"
+            >
               <i>{weapon.description}</i>
             </Typography>
             <Box className="weapon-stats">
@@ -103,7 +126,7 @@ const WeaponsModal = ({ open, onClose, onAddWeapon }) => {
                 <b>Type:</b> {weapon.type}
               </Typography>
               <Typography variant="body2" component="div">
-                <b>Ranged:</b> {weapon.ranged ? 'Yes' : 'No'}
+                <b>Ranged:</b> {weapon.ranged ? "Yes" : "No"}
               </Typography>
               <Typography variant="body2" component="div">
                 <b>Weight:</b> {weapon.weight}

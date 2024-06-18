@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
-import WeaponsModal from './WeaponsModal';
+import React, { useState } from "react";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
+import WeaponsModal from "./WeaponsModal";
 
 const WeaponsSection = ({ weapons, onAddWeapon }) => {
   const [showWeaponsModal, setShowWeaponsModal] = useState(false);
@@ -21,10 +21,11 @@ const WeaponsSection = ({ weapons, onAddWeapon }) => {
       </Button>
       {weapons.map((weapon, index) => (
         <Box key={index} className="flex-container">
-          <Typography variant="body1">
-            {weapon.name}
-          </Typography>
-          <Button variant="outlined" onClick={() => console.log('Remove weapon functionality here')}>
+          <Typography variant="body1">{weapon.name}</Typography>
+          <Button
+            variant="outlined"
+            onClick={() => console.log("Remove weapon functionality here")}
+          >
             Remove
           </Button>
         </Box>
