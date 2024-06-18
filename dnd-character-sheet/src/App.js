@@ -1,33 +1,37 @@
-import React, { useState, useEffect } from 'react';
-import CharacterInfo from './components/CharacterInfo';
-import AttributesBlock from './components/AttributesBlock';
-import SkillsBlock from './components/SkillsBlock';
-import SavingThrowsBlock from './components/SavingThrowsBlock';
-import Inventory from './components/Inventory';
-import races from './data/races';
-import classes from './data/classes';
-import skills from './data/skills';
-import attributes from './data/attributes';
-import Container from '@mui/material/Container';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
-import './App.css';
-import { calculateModifier, getLevelFromExperience, getProficiencyBonusFromLevel } from './utils';
+import React, { useState, useEffect } from "react";
+import CharacterInfo from "./components/CharacterInfo";
+import AttributesBlock from "./components/AttributesBlock";
+import SkillsBlock from "./components/SkillsBlock";
+import SavingThrowsBlock from "./components/SavingThrowsBlock";
+import Inventory from "./components/Inventory";
+import races from "./data/races";
+import classes from "./data/classes";
+import skills from "./data/skills";
+import attributes from "./data/attributes";
+import Container from "@mui/material/Container";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
+import "./App.css";
+import {
+  calculateModifier,
+  getLevelFromExperience,
+  getProficiencyBonusFromLevel,
+} from "./utils";
 
 function App() {
   const [character, setCharacter] = useState({
-    name: '',
-    class: '',
-    level: '',
-    race: '',
-    size: '',
-    background: '',
-    speed: '',
-    initiative: '',
-    armorClass: '',
-    proficiencyBonus: '',
-    experience: '',
+    name: "",
+    class: "",
+    level: "",
+    race: "",
+    size: "",
+    background: "",
+    speed: "",
+    initiative: "",
+    armorClass: "",
+    proficiencyBonus: "",
+    experience: "",
     attributes: { ...attributes },
     skills: Object.keys(skills).reduce((acc, skill) => {
       acc[skill] = false;
@@ -39,7 +43,7 @@ function App() {
     }, {}),
     hitPoints: 0,
     currentHP: 0,
-    hpCalcMethod: 'maximum',
+    hpCalcMethod: "maximum",
     inventory: {
       weapons: [],
       armor: [],
@@ -62,7 +66,12 @@ function App() {
 
   useEffect(() => {
     calculateHitPoints();
-  }, [character.level, character.attributes.constitution, character.class, character.hpCalcMethod]);
+  }, [
+    character.level,
+    character.attributes.constitution,
+    character.class,
+    character.hpCalcMethod,
+  ]);
 
   const handleCharacterChange = (field, value) => {
     setCharacter((prevCharacter) => ({
@@ -186,11 +195,11 @@ function App() {
 
     if (character.level > 1) {
       for (let level = 2; level <= character.level; level++) {
-        if (character.hpCalcMethod === 'maximum') {
+        if (character.hpCalcMethod === "maximum") {
           hitPoints += hitDie + conModifier;
-        } else if (character.hpCalcMethod === 'average') {
+        } else if (character.hpCalcMethod === "average") {
           hitPoints += Math.floor(hitDie / 2) + 1 + conModifier;
-        } else if (character.hpCalcMethod === 'random') {
+        } else if (character.hpCalcMethod === "random") {
           hitPoints += Math.floor(Math.random() * hitDie) + 1 + conModifier;
         }
       }
@@ -211,17 +220,17 @@ function App() {
   };
 
   const saveCharacter = () => {
-    localStorage.setItem('character', JSON.stringify(character));
-    alert('Character saved!');
+    localStorage.setItem("character", JSON.stringify(character));
+    alert("Character saved!");
   };
 
   const loadCharacter = () => {
-    const savedCharacter = localStorage.getItem('character');
+    const savedCharacter = localStorage.getItem("character");
     if (savedCharacter) {
       setCharacter(JSON.parse(savedCharacter));
-      alert('Character loaded!');
+      alert("Character loaded!");
     } else {
-      alert('No saved character found.');
+      alert("No saved character found.");
     }
   };
 
@@ -231,31 +240,31 @@ function App() {
         <Typography variant="h3" gutterBottom>
           Dungeons & Dragons 5e Character Sheet
         </Typography>
-        <CharacterInfo 
-          character={character} 
-          onCharacterChange={handleCharacterChange} 
-          onRaceChange={handleRaceChange} 
-          onClassChange={handleClassChange} 
+        <CharacterInfo
+          character={character}
+          onCharacterChange={handleCharacterChange}
+          onRaceChange={handleRaceChange}
+          onClassChange={handleClassChange}
         />
-        <AttributesBlock 
-          attributes={character.attributes} 
-          onAttributeChange={handleAttributeChange} 
+        <AttributesBlock
+          attributes={character.attributes}
+          onAttributeChange={handleAttributeChange}
           race={character.race}
         />
-        <SkillsBlock 
-          skills={character.skills} 
-          attributes={character.attributes} 
-          proficiencyBonus={character.proficiencyBonus} 
-          onSkillChange={handleSkillChange} 
+        <SkillsBlock
+          skills={character.skills}
+          attributes={character.attributes}
+          proficiencyBonus={character.proficiencyBonus}
+          onSkillChange={handleSkillChange}
         />
-        <SavingThrowsBlock 
-          savingThrows={character.savingThrows} 
-          attributes={character.attributes} 
-          proficiencyBonus={character.proficiencyBonus} 
-          onSaveThrowChange={handleSaveThrowChange} 
+        <SavingThrowsBlock
+          savingThrows={character.savingThrows}
+          attributes={character.attributes}
+          proficiencyBonus={character.proficiencyBonus}
+          onSaveThrowChange={handleSaveThrowChange}
         />
-        <Inventory 
-          inventory={character.inventory} 
+        <Inventory
+          inventory={character.inventory}
           onInventoryChange={handleInventoryChange}
         />
         <Box className="button-container">

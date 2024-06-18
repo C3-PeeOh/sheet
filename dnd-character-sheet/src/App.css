@@ -39,7 +39,7 @@
 }
 
 body {
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   background-color: #f0f0f0;
   margin: 0;
   padding: 0;
@@ -68,7 +68,12 @@ body {
 }
 
 .textfield-readonly .MuiInputBase-root.Mui-disabled {
-  color: rgba(0, 0, 0, 0.87); /* Make sure readonly fields use the standard text color */
+  color: rgba(
+    0,
+    0,
+    0,
+    0.87
+  ); /* Make sure readonly fields use the standard text color */
 }
 
 .helper-text {
@@ -106,6 +111,8 @@ body {
   left: 50%;
   transform: translate(-50%, -50%);
   width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
   background-color: white;
   border: 2px solid #000;
   box-shadow: 24px;
