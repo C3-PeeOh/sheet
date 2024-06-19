@@ -4,11 +4,16 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import WeaponsModal from "./WeaponsModal";
 
-const WeaponsSection = ({ weapons, onAddWeapon }) => {
+const WeaponsSection = ({ weapons, onWeaponsChange }) => {
   const [showWeaponsModal, setShowWeaponsModal] = useState(false);
 
   const handleAddWeapon = (weapon) => {
-    onAddWeapon(weapon);
+    onWeaponsChange([...weapons, weapon]);
+  };
+
+  const handleRemoveWeapon = (index) => {
+    const newWeapons = weapons.filter((_, i) => i !== index);
+    onWeaponsChange(newWeapons);
   };
 
   return (
@@ -20,12 +25,12 @@ const WeaponsSection = ({ weapons, onAddWeapon }) => {
         Add Weapon
       </Button>
       {weapons.map((weapon, index) => (
-        <Box key={index} className="flex-container">
+        <Box key={index} className="flex-container weapon-item">
           <Typography variant="body1">{weapon.name}</Typography>
-          <Button
-            variant="outlined"
-            onClick={() => console.log("Remove weapon functionality here")}
-          >
+          <Typography variant="body2" className="weapon-damage">
+            Damage: {weapon.damage}
+          </Typography>
+          <Button variant="outlined" onClick={() => handleRemoveWeapon(index)}>
             Remove
           </Button>
         </Box>
