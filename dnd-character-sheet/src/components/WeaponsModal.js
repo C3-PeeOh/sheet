@@ -56,7 +56,7 @@ const WeaponsModal = ({ open, onClose, onAddWeapon }) => {
     <Modal open={open} onClose={onClose}>
       <Box className="modal">
         <Typography variant="h6" gutterBottom>
-          Add Weapon
+          Weaponsmith
         </Typography>
         <TextField
           label="Search"

@@ -50,6 +50,8 @@ function App() {
       coinPurse: { copper: 0, silver: 0, gold: 0, gemstones: [] },
       gear: [],
     },
+    selectedArmor: null,
+    selectedShield: null,
   });
   const [previousRace, setPreviousRace] = useState(null);
   const [previousClass, setPreviousClass] = useState(null);
@@ -73,6 +75,14 @@ function App() {
     character.hpCalcMethod,
   ]);
 
+  useEffect(() => {
+    calculateArmorClass();
+  }, [
+    character.attributes.dexterity,
+    character.selectedArmor,
+    character.selectedShield,
+  ]);
+
   const handleCharacterChange = (field, value) => {
     setCharacter((prevCharacter) => ({
       ...prevCharacter,
@@ -91,7 +101,6 @@ function App() {
         ...prevCharacter,
         attributes: updatedAttributes,
         initiative: calculateModifier(updatedAttributes.dexterity),
-        armorClass: 10 + calculateModifier(updatedAttributes.dexterity),
       };
     });
   };
@@ -110,11 +119,8 @@ function App() {
     setCharacter((prevCharacter) => ({
       ...prevCharacter,
       savingThrows: {
-        ...prevCharacter,
-        savingThrows: {
-          ...prevCharacter.savingThrows,
-          [attribute]: value,
-        },
+        ...prevCharacter.savingThrows,
+        [attribute]: value,
       },
     }));
   };
@@ -123,6 +129,20 @@ function App() {
     setCharacter((prevCharacter) => ({
       ...prevCharacter,
       inventory: newInventory,
+    }));
+  };
+
+  const handleArmorSelect = (selectedArmor) => {
+    setCharacter((prevCharacter) => ({
+      ...prevCharacter,
+      selectedArmor,
+    }));
+  };
+
+  const handleShieldSelect = (selectedShield) => {
+    setCharacter((prevCharacter) => ({
+      ...prevCharacter,
+      selectedShield,
     }));
   };
 
@@ -212,6 +232,36 @@ function App() {
     }));
   };
 
+  const calculateArmorClass = () => {
+    let baseAC = 10;
+    let dexModifier = calculateModifier(character.attributes.dexterity);
+    let armorAC = 0;
+    let shieldAC = 0;
+
+    if (character.selectedArmor) {
+      const selectedArmorAC = character.selectedArmor.AC;
+      if (selectedArmorAC.includes("Dex modifier")) {
+        const maxDex = selectedArmorAC.includes("(max 2)")
+          ? Math.min(dexModifier, 2)
+          : dexModifier;
+        armorAC = parseInt(selectedArmorAC.split(" ")[0]) + maxDex;
+      } else {
+        armorAC = parseInt(selectedArmorAC);
+      }
+    }
+
+    if (character.selectedShield) {
+      shieldAC = parseInt(character.selectedShield.AC.replace("+", ""));
+    }
+
+    const totalAC = baseAC + dexModifier + armorAC + shieldAC;
+
+    setCharacter((prevCharacter) => ({
+      ...prevCharacter,
+      armorClass: totalAC,
+    }));
+  };
+
   const handleHPMethodChange = (method) => {
     setCharacter((prevCharacter) => ({
       ...prevCharacter,
@@ -266,6 +316,8 @@ function App() {
         <Inventory
           inventory={character.inventory}
           onInventoryChange={handleInventoryChange}
+          onArmorSelect={handleArmorSelect}
+          onShieldSelect={handleShieldSelect}
         />
         <Box className="button-container">
           <Button variant="contained" color="primary" onClick={saveCharacter}>

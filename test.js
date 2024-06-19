@@ -65,3 +65,13 @@ Sliding checkbox
   .checkbox-wrapper-8 .tgl:checked + .tgl-btn:after {
     left: 0;
   }
+
+  ERROR
+[eslint] 
+src/components/ArmorSection.js
+  Line 49:25:  'calculateModifier' is not defined  no-undef
+  Line 49:43:  'attributes' is not defined         no-undef
+  Line 51:27:  'calculateModifier' is not defined  no-undef
+  Line 51:45:  'attributes' is not defined         no-undef
+
+Search for the keywords to learn more about each error.
