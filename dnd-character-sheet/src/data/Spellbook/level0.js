@@ -1,4 +1,4 @@
-const level0 = [
+const cantrips = [
   {
     name: "Acid Splash",
     school: "Conjuration",
@@ -10,6 +10,7 @@ const level0 = [
     concentration: false,
     aoe: true,
     self: false,
+    type: "acid",
     description:
       "You hurl a bubble of acid. Choose one creature within range, or two creatures within range that are within 5 feet of each other. A target must succeed on a Dexterity saving throw or take 1d6 acid damage.",
     damage: [
@@ -30,6 +31,7 @@ const level0 = [
     concentration: false,
     aoe: false,
     self: true,
+    type: "protection",
     description:
       "You extend your hand and trace a sigil of warding in the air. Until the end of your next turn, you have resistance against bludgeoning, piercing, and slashing damage dealt by weapon attacks.",
     damage: [],
@@ -45,6 +47,7 @@ const level0 = [
     concentration: false,
     aoe: false,
     self: false,
+    type: "necrotic",
     description:
       "You create a ghostly skeletal hand in the space of a creature within range. Make a ranged spell attack against the creature to assail it with the chill of the grave. On a hit, the target takes 1d8 necrotic damage and it can’t regain hit points until the start of your next turn. Until then, the hand clings to the target.",
     damage: [
@@ -69,6 +72,7 @@ const level0 = [
     concentration: true,
     aoe: true,
     self: false,
+    type: "utility",
     description:
       "You create up to four torch-sized lights within range, making them appear as torches, lanterns, or glowing orbs that hover in the air for the duration. You can also combine the four lights into one glowing vaguely humanoid form of Medium size. Whichever form you choose, each light sheds dim light in a 10-foot radius.",
     damage: [],
@@ -84,6 +88,7 @@ const level0 = [
     concentration: false,
     aoe: true,
     self: true,
+    type: "utility",
     description:
       "Whispering to the spirits of nature, you create one of the following effects within range: - You create a tiny, harmless sensory effect that predicts the weather for the next 24 hours. - You instantly make a flower blossom, a seed pod open, or a leaf bud bloom. - You create a harmless sensory effect, such as falling leaves, a puff of wind, the sound of a small animal, or the faint odor of skunk. - You instantly light or snuff out a candle, a torch, or a small campfire.",
     damage: [],
@@ -99,6 +104,7 @@ const level0 = [
     concentration: false,
     aoe: false,
     self: false,
+    type: "force",
     description:
       "A beam of crackling energy streaks toward a creature within range. Make a ranged spell attack against the target. On a hit, the target takes 1d10 force damage. The spell creates more than one beam when you reach higher levels: two beams at 5th level, three beams at 11th level, and four beams at 17th level. You can direct the beams at the same target or at different ones. Make a separate attack roll for each beam.",
     damage: [
@@ -119,6 +125,7 @@ const level0 = [
     concentration: false,
     aoe: false,
     self: false,
+    type: "fire",
     description:
       "You hurl a mote of fire at a creature or object within range. Make a ranged spell attack against the target. On a hit, the target takes 1d10 fire damage. A flammable object hit by this spell ignites if it isn’t being worn or carried.",
     damage: [
@@ -139,6 +146,7 @@ const level0 = [
     concentration: true,
     aoe: false,
     self: false,
+    type: "utility",
     description:
       "You touch one willing creature. Once before the spell ends, the target can roll a d4 and add the number rolled to one ability check of its choice. It can roll the die before or after making the ability check. The spell then ends.",
     damage: [],
@@ -158,6 +166,7 @@ const level0 = [
     concentration: false,
     aoe: true,
     self: false,
+    type: "utility",
     description:
       "You touch one object that is no larger than 10 feet in any dimension. Until the spell ends, the object sheds bright light in a 20-foot radius and dim light for an additional 20 feet. The light can be colored as you like. Completely covering the object with something opaque blocks the light. The spell ends if you cast it again or dismiss it as an action. If you target an object held or worn by a hostile creature, that creature must succeed on a Dexterity saving throw to avoid the spell.",
     damage: [],
@@ -173,6 +182,7 @@ const level0 = [
     concentration: false,
     aoe: false,
     self: false,
+    type: "utility",
     description:
       "A spectral, floating hand appears at a point you choose within range. The hand lasts for the duration or until you dismiss it as an action. The hand vanishes if it is ever more than 30 feet away from you or if you cast this spell again. You can use your action to control the hand. You can use the hand to manipulate an object, open an unlocked door or container, stow or retrieve an item from an open container, or pour the contents out of a vial. You can move the hand up to 30 feet each time you use it.",
     damage: [],
@@ -188,8 +198,9 @@ const level0 = [
     concentration: false,
     aoe: false,
     self: false,
+    type: "utility",
     description:
-      "This spell repairs a single break or tear in an object you touch, such as a broken chain link, two halves of a broken key, a torn cloak, or a leaking wineskin.",
+      "This spell repairs a single break or tear in an object you touch, such as a broken chain link, two halves of a broken key, a torn cloak, or a leaking wineskin. As long as the break or tear is no larger than 1 foot in any dimension, you mend it, leaving no trace of the former damage. This spell can physically repair a magic item or construct, but the spell can’t restore magic to such an object.",
     damage: [],
   },
   {
@@ -207,8 +218,9 @@ const level0 = [
     concentration: false,
     aoe: false,
     self: false,
+    type: "utility",
     description:
-      "You point your finger toward a creature within range and whisper a message. The target (and only the target) hears the message and can reply in a whisper that only you can hear.",
+      "You point your finger toward a creature within range and whisper a message. The target (and only the target) hears the message and can reply in a whisper that only you can hear. You can cast this spell through solid objects if you are familiar with the target and know it is beyond the barrier. Magical silence, 1 foot of stone, 1 inch of common metal, a thin sheet of lead, or 3 feet of wood blocks the spell.",
     damage: [],
   },
   {
@@ -220,10 +232,11 @@ const level0 = [
     components: { verbal: false, somatic: true, material: "a bit of fleece" },
     duration: "1 minute",
     concentration: false,
-    aoe: true,
+    aoe: false,
     self: false,
+    type: "utility",
     description:
-      "You create a sound or an image of an object within range that lasts for the duration. The illusion also ends if you dismiss it as an action or cast this spell again.",
+      "You create a sound or an image of an object within range that lasts for the duration. The illusion also ends if you dismiss it as an action or cast this spell again. If you create a sound, its volume can range from a whisper to a scream. It can be your voice, someone else's voice, a lion's roar, a beating drum, or any other sound you choose. The sound continues unabated throughout the duration, or you can make discrete sounds at different times before the spell ends.",
     damage: [],
   },
   {
@@ -237,6 +250,7 @@ const level0 = [
     concentration: false,
     aoe: false,
     self: false,
+    type: "poison",
     description:
       "You extend your hand toward a creature you can see within range and project a puff of noxious gas from your palm. The creature must succeed on a Constitution saving throw or take 1d12 poison damage.",
     damage: [
@@ -255,10 +269,11 @@ const level0 = [
     components: { verbal: true, somatic: true, material: "none" },
     duration: "Up to 1 hour",
     concentration: false,
-    aoe: true,
+    aoe: false,
     self: true,
+    type: "utility",
     description:
-      "This spell is a minor magical trick that novice spellcasters use for practice. You create one of several minor effects, such as creating an instantaneous, harmless sensory effect, lighting or snuffing out a candle, or cleaning or soiling an object.",
+      "This spell is a minor magical trick that novice spellcasters use for practice. You create one of the following magical effects within range: - You create an instantaneous, harmless sensory effect, such as a shower of sparks, a puff of wind, faint musical notes, or an odd odor. - You instantaneously light or snuff out a candle, a torch, or a small campfire. - You instantaneously clean or soil an object no larger than 1 cubic foot. - You chill, warm, or flavor up to 1 cubic foot of nonliving material for 1 hour. - You make a color, a small mark, or a symbol appear on an object or a surface for 1 hour. - You create a nonmagical trinket or an illusory image that can fit in your hand and that lasts until the end of your next turn.",
     damage: [],
   },
   {
@@ -272,8 +287,9 @@ const level0 = [
     concentration: false,
     aoe: false,
     self: true,
+    type: "fire",
     description:
-      "A flickering flame appears in your hand. The flame remains there for the duration and harms neither you nor your equipment. The flame sheds bright light in a 10-foot radius and dim light for an additional 10 feet. The spell ends if you dismiss it as an action or if you cast it again.",
+      "A flickering flame appears in your hand. The flame remains there for the duration and harms neither you nor your equipment. The flame sheds bright light in a 10-foot radius and dim light for an additional 10 feet. The spell ends if you dismiss it as an action or if you cast it again. You can also attack with the flame, although doing so ends the spell. When you cast this spell, or as an action on a later turn, you can hurl the flame at a creature within 30 feet of you. Make a ranged spell attack. On a hit, the target takes 1d8 fire damage.",
     damage: [
       { level: 1, amount: "1d8" },
       { level: 5, amount: "2d8" },
@@ -292,6 +308,7 @@ const level0 = [
     concentration: false,
     aoe: false,
     self: false,
+    type: "cold",
     description:
       "A frigid beam of blue-white light streaks toward a creature within range. Make a ranged spell attack against the target. On a hit, it takes 1d8 cold damage, and its speed is reduced by 10 feet until the start of your next turn.",
     damage: [
@@ -312,6 +329,7 @@ const level0 = [
     concentration: true,
     aoe: false,
     self: false,
+    type: "protection",
     description:
       "You touch one willing creature. Once before the spell ends, the target can roll a d4 and add the number rolled to one saving throw of its choice. It can roll the die before or after making the saving throw. The spell then ends.",
     damage: [],
@@ -327,6 +345,7 @@ const level0 = [
     concentration: false,
     aoe: false,
     self: false,
+    type: "radiant",
     description:
       "Flame-like radiance descends on a creature that you can see within range. The target must succeed on a Dexterity saving throw or take 1d8 radiant damage. The target gains no benefit from cover for this saving throw.",
     damage: [
@@ -350,9 +369,10 @@ const level0 = [
     duration: "1 minute",
     concentration: false,
     aoe: false,
-    self: true,
+    self: false,
+    type: "utility",
     description:
-      "The wood of a club or quarterstaff you are holding is imbued with nature’s power. For the duration, you can use your spellcasting ability instead of Strength for the attack and damage rolls of melee attacks using that weapon, and the weapon’s damage die becomes a d8. The weapon also becomes magical, if it isn’t already.",
+      "The wood of a club or quarterstaff you are holding is imbued with nature’s power. For the duration, you can use your spellcasting ability instead of Strength for the attack and damage rolls of melee attacks using that weapon, and the weapon’s damage die becomes a d8. The weapon also becomes magical if it isn’t already.",
     damage: [],
   },
   {
@@ -361,11 +381,12 @@ const level0 = [
     level: 0,
     castingTime: "1 action",
     range: "Touch",
-    components: { verbal: true, somatic: true, material: "none" },
+    components: { verbal: false, somatic: true, material: "none" },
     duration: "Instantaneous",
     concentration: false,
     aoe: false,
     self: false,
+    type: "lightning",
     description:
       "Lightning springs from your hand to deliver a shock to a creature you try to touch. Make a melee spell attack against the target. You have advantage on the attack roll if the target is wearing armor made of metal. On a hit, the target takes 1d8 lightning damage, and it can’t take reactions until the start of its next turn.",
     damage: [
@@ -381,15 +402,150 @@ const level0 = [
     level: 0,
     castingTime: "1 action",
     range: "Touch",
+    components: { verbal: false, somatic: true, material: "none" },
+    duration: "Instantaneous",
+    concentration: false,
+    aoe: false,
+    self: false,
+    type: "healing",
+    description:
+      "You touch a living creature that has 0 hit points. The creature becomes stable. This spell has no effect on undead or constructs.",
+    damage: [],
+  },
+  {
+    name: "Thaumaturgy",
+    school: "Transmutation",
+    level: 0,
+    castingTime: "1 action",
+    range: "30 feet",
+    components: { verbal: true, somatic: false, material: "none" },
+    duration: "Up to 1 minute",
+    concentration: false,
+    aoe: true,
+    self: true,
+    type: "utility",
+    description:
+      "You manifest a minor wonder, a sign of supernatural power, within range. You create one of the following magical effects within range: - Your voice booms up to three times as loud as normal for 1 minute. - You cause flames to flicker, brighten, dim, or change color for 1 minute. - You cause harmless tremors in the ground for 1 minute. - You create a sound that originates from a point of your choice within range. - You cause an unlocked door or window to fly open or slam shut. - You alter the appearance of your eyes for 1 minute.",
+    damage: [],
+  },
+  {
+    name: "Thorn Whip",
+    school: "Transmutation",
+    level: 0,
+    castingTime: "1 action",
+    range: "30 feet",
+    components: {
+      verbal: true,
+      somatic: true,
+      material: "the stem of a plant with thorns",
+    },
+    duration: "Instantaneous",
+    concentration: false,
+    aoe: false,
+    self: false,
+    type: "piercing",
+    description:
+      "You create a long, vine-like whip covered in thorns that lashes out at your command toward a creature in range. Make a melee spell attack against the target. If the attack hits, the creature takes 1d6 piercing damage, and if the creature is Large or smaller, you pull the creature up to 10 feet closer to you.",
+    damage: [
+      { level: 1, amount: "1d6" },
+      { level: 5, amount: "2d6" },
+      { level: 11, amount: "3d6" },
+      { level: 17, amount: "4d6" },
+    ],
+  },
+  {
+    name: "Thunderclap",
+    school: "Evocation",
+    level: 0,
+    castingTime: "1 action",
+    range: "Self (5-foot radius)",
+    components: { verbal: true, somatic: true, material: "none" },
+    duration: "Instantaneous",
+    concentration: false,
+    aoe: true,
+    self: true,
+    type: "thunder",
+    description:
+      "You create a burst of thunderous sound that can be heard up to 100 feet away. Each creature other than you within 5 feet of you must make a Constitution saving throw. On a failed save, the creature takes 1d6 thunder damage.",
+    damage: [
+      { level: 1, amount: "1d6" },
+      { level: 5, amount: "2d6" },
+      { level: 11, amount: "3d6" },
+      { level: 17, amount: "4d6" },
+    ],
+  },
+  {
+    name: "Toll the Dead",
+    school: "Necromancy",
+    level: 0,
+    castingTime: "1 action",
+    range: "60 feet",
     components: { verbal: true, somatic: true, material: "none" },
     duration: "Instantaneous",
     concentration: false,
     aoe: false,
     self: false,
+    type: "necrotic",
     description:
-      "You touch a living creature that has 0 hit points. The creature becomes stable. This spell has no effect on undead or constructs.",
+      "You point at one creature you can see within range, and the sound of a dolorous bell fills the air around it for a moment. The target must succeed on a Wisdom saving throw or take 1d8 necrotic damage. If the target is missing any of its hit points, it instead takes 1d12 necrotic damage.",
+    damage: [
+      { level: 1, amount: "1d8 or 1d12" },
+      { level: 5, amount: "2d8 or 2d12" },
+      { level: 11, amount: "3d8 or 3d12" },
+      { level: 17, amount: "4d8 or 4d12" },
+    ],
+  },
+  {
+    name: "True Strike",
+    school: "Divination",
+    level: 0,
+    castingTime: "1 action",
+    range: "30 feet",
+    components: { verbal: false, somatic: true, material: "none" },
+    duration: "Concentration, up to 1 round",
+    concentration: true,
+    aoe: false,
+    self: true,
+    type: "utility",
+    description:
+      "You extend your hand and point a finger at a target in range. Your magic grants you a brief insight into the target’s defenses. On your next turn, you gain advantage on your first attack roll against the target, provided that this spell hasn’t ended.",
+    damage: [],
+  },
+  {
+    name: "Vicious Mockery",
+    school: "Enchantment",
+    level: 0,
+    castingTime: "1 action",
+    range: "60 feet",
+    components: { verbal: true, somatic: false, material: "none" },
+    duration: "Instantaneous",
+    concentration: false,
+    aoe: false,
+    self: false,
+    type: "psychic",
+    description:
+      "You unleash a string of insults laced with subtle enchantments at a creature you can see within range. If the target can hear you (though it need not understand you), it must succeed on a Wisdom saving throw or take 1d4 psychic damage and have disadvantage on the next attack roll it makes before the end of its next turn.",
+    damage: [
+      { level: 1, amount: "1d4" },
+      { level: 5, amount: "2d4" },
+      { level: 11, amount: "3d4" },
+      { level: 17, amount: "4d4" },
+    ],
+  },
+  {
+    name: "Resistance",
+    school: "Abjuration",
+    level: 0,
+    castingTime: "1 action",
+    range: "Touch",
+    components: { verbal: true, somatic: true, material: "a miniature cloak" },
+    duration: "Up to 1 minute",
+    concentration: true,
+    aoe: false,
+    self: false,
+    type: "protection",
+    description:
+      "You touch one willing creature. Once before the spell ends, the target can roll a d4 and add the number rolled to one saving throw of its choice. It can roll the die before or after making the saving throw. The spell then ends.",
     damage: [],
   },
 ];
-
-export default level0;
