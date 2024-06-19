@@ -143,19 +143,22 @@ body {
   border: 1px solid #ccc;
 }
 
-.weapon-info {
+.weapon-info,
+.armor-info {
   border-bottom: 1px solid #ccc;
   padding: 10px 0;
 }
 
-.weapon-stats {
+.weapon-stats,
+.armor-stats {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   grid-gap: 10px;
   margin: 10px 0;
 }
 
-.weapon-cost-add {
+.weapon-cost-add,
+.armor-cost-add {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -166,17 +169,4 @@ body {
   display: flex;
   justify-content: center;
   margin: 20px 0;
-}
-
-.weapon-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
-  padding: 10px;
-  border-bottom: 1px solid #ccc;
-}
-
-.weapon-damage {
-  margin-left: 10px;
 }
