@@ -29,7 +29,7 @@ function App() {
     background: "",
     speed: "",
     initiative: "",
-    armorClass: "",
+    armorClass: 10,
     proficiencyBonus: "",
     experience: "",
     attributes: { ...attributes },
@@ -50,11 +50,11 @@ function App() {
       coinPurse: { copper: 0, silver: 0, gold: 0, gemstones: [] },
       gear: [],
     },
-    selectedArmor: null,
-    selectedShield: null,
   });
   const [previousRace, setPreviousRace] = useState(null);
   const [previousClass, setPreviousClass] = useState(null);
+  const [selectedArmor, setSelectedArmor] = useState(null);
+  const [selectedShields, setSelectedShields] = useState([]);
 
   useEffect(() => {
     const level = getLevelFromExperience(character.experience);
@@ -76,12 +76,8 @@ function App() {
   ]);
 
   useEffect(() => {
-    calculateArmorClass();
-  }, [
-    character.attributes.dexterity,
-    character.selectedArmor,
-    character.selectedShield,
-  ]);
+    updateArmorClass();
+  }, [character.attributes, selectedArmor, selectedShields]);
 
   const handleCharacterChange = (field, value) => {
     setCharacter((prevCharacter) => ({
@@ -119,8 +115,11 @@ function App() {
     setCharacter((prevCharacter) => ({
       ...prevCharacter,
       savingThrows: {
-        ...prevCharacter.savingThrows,
-        [attribute]: value,
+        ...prevCharacter,
+        savingThrows: {
+          ...prevCharacter.savingThrows,
+          [attribute]: value,
+        },
       },
     }));
   };
@@ -129,20 +128,6 @@ function App() {
     setCharacter((prevCharacter) => ({
       ...prevCharacter,
       inventory: newInventory,
-    }));
-  };
-
-  const handleArmorSelect = (selectedArmor) => {
-    setCharacter((prevCharacter) => ({
-      ...prevCharacter,
-      selectedArmor,
-    }));
-  };
-
-  const handleShieldSelect = (selectedShield) => {
-    setCharacter((prevCharacter) => ({
-      ...prevCharacter,
-      selectedShield,
     }));
   };
 
@@ -232,40 +217,34 @@ function App() {
     }));
   };
 
-  const calculateArmorClass = () => {
-    let baseAC = 10;
-    let dexModifier = calculateModifier(character.attributes.dexterity);
-    let armorAC = 0;
-    let shieldAC = 0;
-
-    if (character.selectedArmor) {
-      const selectedArmorAC = character.selectedArmor.AC;
-      if (selectedArmorAC.includes("Dex modifier")) {
-        const maxDex = selectedArmorAC.includes("(max 2)")
-          ? Math.min(dexModifier, 2)
-          : dexModifier;
-        armorAC = parseInt(selectedArmorAC.split(" ")[0]) + maxDex;
-      } else {
-        armorAC = parseInt(selectedArmorAC);
-      }
-    }
-
-    if (character.selectedShield) {
-      shieldAC = parseInt(character.selectedShield.AC.replace("+", ""));
-    }
-
-    const totalAC = baseAC + dexModifier + armorAC + shieldAC;
-
-    setCharacter((prevCharacter) => ({
-      ...prevCharacter,
-      armorClass: totalAC,
-    }));
-  };
-
   const handleHPMethodChange = (method) => {
     setCharacter((prevCharacter) => ({
       ...prevCharacter,
       hpCalcMethod: method,
+    }));
+  };
+
+  const updateArmorClass = () => {
+    let baseAC = 10 + calculateModifier(character.attributes.dexterity);
+    if (selectedArmor) {
+      baseAC = selectedArmor.AC;
+      if (selectedArmor.ACmodifier !== "none") {
+        let dexModifier = calculateModifier(
+          character.attributes[selectedArmor.ACmodifier],
+        );
+        if (selectedArmor.MaxDexterity !== "max") {
+          dexModifier = Math.min(dexModifier, selectedArmor.MaxDexterity);
+        }
+        baseAC += dexModifier;
+      }
+    }
+    let totalAC = baseAC;
+    selectedShields.forEach((shield) => {
+      totalAC += parseInt(shield.AC.replace("+", ""), 10);
+    });
+    setCharacter((prevCharacter) => ({
+      ...prevCharacter,
+      armorClass: totalAC,
     }));
   };
 
@@ -316,8 +295,11 @@ function App() {
         <Inventory
           inventory={character.inventory}
           onInventoryChange={handleInventoryChange}
-          onArmorSelect={handleArmorSelect}
-          onShieldSelect={handleShieldSelect}
+          selectedArmor={selectedArmor}
+          onArmorSelect={setSelectedArmor}
+          selectedShields={selectedShields}
+          onShieldSelect={setSelectedShields}
+          attributes={character.attributes}
         />
         <Box className="button-container">
           <Button variant="contained" color="primary" onClick={saveCharacter}>

@@ -1,3 +1,4 @@
+// Inventory.js
 import React from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
@@ -6,7 +7,13 @@ import ArmorSection from "./ArmorSection";
 import CoinPurseSection from "./CoinPurseSection";
 import GearSection from "./GearSection";
 
-function Inventory({ inventory, onInventoryChange }) {
+function Inventory({
+  inventory,
+  onInventoryChange,
+  onArmorSelect,
+  onShieldSelect,
+  attributes, // Add attributes prop
+}) {
   const handleWeaponsChange = (newWeapons) => {
     onInventoryChange({ ...inventory, weapons: newWeapons });
   };
@@ -32,7 +39,13 @@ function Inventory({ inventory, onInventoryChange }) {
         weapons={inventory.weapons}
         onWeaponsChange={handleWeaponsChange}
       />
-      <ArmorSection armor={inventory.armor} onArmorChange={handleArmorChange} />
+      <ArmorSection
+        armor={inventory.armor}
+        onArmorChange={handleArmorChange}
+        onArmorSelect={onArmorSelect}
+        onShieldSelect={onShieldSelect}
+        attributes={attributes} // Pass attributes to ArmorSection
+      />
       <CoinPurseSection
         coinPurse={inventory.coinPurse}
         onCoinPurseChange={handleCoinPurseChange}
